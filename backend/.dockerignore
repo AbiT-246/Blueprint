@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+.env
+.env.*
+!.env.example
+npm-debug.log*
+Dockerfile
+README.md
+test
+*.md
+.eslintrc*
+eslint.config.mjs
+.prettierrc
