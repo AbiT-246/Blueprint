@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DesignStyle {
+  MODERN
+  SCANDINAVIAN
+  JAPANDI
+  MINIMALIST
+}
+
+enum RoomStatus {
+  UPLOADED
+  GENERATING
+  READY
+  FAILED
+}
+
+enum ItemCategory {
+  SOFA
+  COFFEE_TABLE
+  RUG
+  LAMP
+  PLANT
+  CHAIR
+  SHELF
+  OTHER
+}
+
+enum Retailer {
+  WAYFAIR
+  IKEA
+  AMAZON
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  rooms Room[]
+}
+
+/// A user's room project: uploaded photo → AI redesign → editable canvas.
+model Room {
+  id                String       @id @default(cuid())
+  userId            String
+  templateId        String?
+  title             String?
+  style             DesignStyle?
+  status            RoomStatus   @default(UPLOADED)
+  /// Original empty-room photo uploaded by the user.
+  sourceImageUrl    String
+  /// AI-generated redesigned room image used as the interactive canvas background.
+  generatedImageUrl String?
+  /// Optional physical constraints for smarter placement (meters).
+  widthMeters       Float?
+  depthMeters       Float?
+  failureReason     String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template  Template?  @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  roomItems RoomItem[]
+
+  @@index([userId])
+  @@index([templateId])
+  @@index([status])
+}
+
+model Template {
+  id              String       @id @default(cuid())
+  name            String
+  description     String?
+  style           DesignStyle
+  previewImageUrl String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  rooms         Room[]
+  templateItems TemplateItem[]
+
+  @@index([style])
+}
+
+model Item {
+  id          String       @id @default(cuid())
+  title       String
+  imageUrl    String
+  category    ItemCategory
+  description String?
+  embeddingId String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  roomItems     RoomItem[]
+  templateItems TemplateItem[]
+  productOffers ProductOffer[]
+
+  @@index([category])
+  @@index([title])
+}
+
+model RoomItem {
+  id       String @id @default(cuid())
+  roomId   String
+  itemId   String
+  positionX Float
+  positionY Float
+  scale     Float @default(1)
+  rotation  Float @default(0)
+  zIndex    Int   @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Restrict)
+
+  @@index([roomId])
+  @@index([itemId])
+}
+
+model TemplateItem {
+  id         String @id @default(cuid())
+  templateId String
+  itemId     String
+  positionX  Float
+  positionY  Float
+  scale      Float @default(1)
+  rotation   Float @default(0)
+  zIndex     Int   @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  template Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  item     Item     @relation(fields: [itemId], references: [id], onDelete: Restrict)
+
+  @@index([templateId])
+  @@index([itemId])
+}
+
+model ProductOffer {
+  id           String   @id @default(cuid())
+  itemId       String
+  retailer     Retailer
+  title        String
+  priceCents   Int
+  currency     String   @default("USD")
+  productUrl   String
+  imageUrl     String?
+  externalId   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, retailer, productUrl])
+  @@index([itemId])
+  @@index([retailer])
+}
