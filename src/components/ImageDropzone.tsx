@@ -21,30 +21,27 @@ interface ImagePreview {
 }
 
 export default function ImageDropzone() {
-  const [previews, setPreviews] = useState<ImagePreview[]>([]);
-  const previewsRef = useRef<ImagePreview[]>(previews);
+  const [preview, setPreview] = useState<ImagePreview | null>(null);
+  const previewRef = useRef<ImagePreview | null>(preview);
 
   useEffect(() => {
-    previewsRef.current = previews;
-  }, [previews]);
+    previewRef.current = preview;
+  }, [preview]);
 
   useEffect(() => {
-    return () => previewsRef.current.forEach(revokePreview);
+    return () => {
+      if (previewRef.current) revokePreview(previewRef.current);
+    };
   }, []);
 
-  const onDropAccepted = useCallback((acceptedFiles: File[]) => {
-    const newPreviews = acceptedFiles.map((file) => ({
-      file,
-      previewUrl: URL.createObjectURL(file),
-    }));
-    setPreviews((current) => [...current, ...newPreviews]);
+  const onDropAccepted = useCallback(([file]: File[]) => {
+    setPreview({ file, previewUrl: URL.createObjectURL(file) });
   }, []);
 
-  const removePreview = useCallback((previewUrl: string) => {
-    setPreviews((current) => {
-      const target = current.find((preview) => preview.previewUrl === previewUrl);
-      if (target) revokePreview(target);
-      return current.filter((preview) => preview.previewUrl !== previewUrl);
+  const clearPreview = useCallback(() => {
+    setPreview((current) => {
+      if (current) revokePreview(current);
+      return null;
     });
   }, []);
 
@@ -52,8 +49,14 @@ export default function ImageDropzone() {
     useDropzone({
       accept: ACCEPTED_IMAGE_TYPES,
       maxSize: MAX_FILE_SIZE_BYTES,
+      multiple: false,
+      disabled: preview !== null,
       onDropAccepted,
     });
+
+  if (preview) {
+    return <SelectedImage preview={preview} onClear={clearPreview} />;
+  }
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -71,33 +74,37 @@ export default function ImageDropzone() {
       </div>
 
       {fileRejections.length > 0 && <RejectionList rejections={fileRejections} />}
+    </div>
+  );
+}
 
-      {previews.length > 0 && (
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {previews.map((preview) => (
-            <li
-              key={preview.previewUrl}
-              className="group relative aspect-square overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-900"
-            >
-              <Image
-                src={preview.previewUrl}
-                alt={preview.file.name}
-                fill
-                unoptimized
-                className="object-cover"
-              />
-              <button
-                type="button"
-                onClick={() => removePreview(preview.previewUrl)}
-                className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
-                aria-label={`Remove ${preview.file.name}`}
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+function SelectedImage({ preview, onClear }: { preview: ImagePreview; onClear: () => void }) {
+  return (
+    <div className="flex w-full flex-col items-center gap-6">
+      <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900">
+        <Image
+          src={preview.previewUrl}
+          alt={preview.file.name}
+          fill
+          unoptimized
+          className="object-contain"
+        />
+        <button
+          type="button"
+          onClick={onClear}
+          className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-lg leading-none text-white transition-colors hover:bg-black/80"
+          aria-label={`Remove ${preview.file.name}`}
+        >
+          ×
+        </button>
+      </div>
+
+      <button
+        type="button"
+        className="rounded-full bg-black px-8 py-3 font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200"
+      >
+        Process
+      </button>
     </div>
   );
 }
@@ -119,9 +126,9 @@ function revokePreview(preview: ImagePreview): void {
 }
 
 function getDropzoneMessage(isDragActive: boolean, isDragReject: boolean): string {
-  if (isDragReject) return "Only image files are accepted";
-  if (isDragActive) return "Drop the images here";
-  return "Drag 'n' drop images here, or click to select";
+  if (isDragReject) return "Only a single image file is accepted";
+  if (isDragActive) return "Drop the image here";
+  return "Drag 'n' drop an image here, or click to select";
 }
 
 function getDropzoneStateClasses(isDragActive: boolean, isDragReject: boolean): string {
