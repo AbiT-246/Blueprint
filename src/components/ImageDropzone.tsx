@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone, type Accept, type FileRejection } from "react-dropzone";
+import AestheticSidebar from "@/components/AestheticSidebar";
 import { generateEmptyRoomImage } from "@/lib/api/openai";
 import { base64ToFile, readFileAsDataUrl } from "@/lib/files";
 
@@ -21,6 +22,7 @@ const ACCEPTED_IMAGE_TYPES: Accept = {
 interface ImagePreview {
   file: File;
   previewUrl: string;
+  isGenerated: boolean;
 }
 
 export default function ImageDropzone() {
@@ -38,13 +40,13 @@ export default function ImageDropzone() {
   }, []);
 
   const onDropAccepted = useCallback(([file]: File[]) => {
-    setPreview(createPreview(file));
+    setPreview(createPreview(file, false));
   }, []);
 
-  const replacePreview = useCallback((file: File) => {
+  const showGeneratedImage = useCallback((file: File) => {
     setPreview((current) => {
       if (current) revokePreview(current);
-      return createPreview(file);
+      return createPreview(file, true);
     });
   }, []);
 
@@ -65,7 +67,13 @@ export default function ImageDropzone() {
     });
 
   if (preview) {
-    return <SelectedImage preview={preview} onClear={clearPreview} onReplace={replacePreview} />;
+    return (
+      <SelectedImage
+        preview={preview}
+        onClear={clearPreview}
+        onGenerated={showGeneratedImage}
+      />
+    );
   }
 
   return (
@@ -91,27 +99,10 @@ export default function ImageDropzone() {
 interface SelectedImageProps {
   preview: ImagePreview;
   onClear: () => void;
-  onReplace: (file: File) => void;
+  onGenerated: (file: File) => void;
 }
 
-function SelectedImage({ preview, onClear, onReplace }: SelectedImageProps) {
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [processError, setProcessError] = useState<string | null>(null);
-
-  const processImage = useCallback(async () => {
-    setIsProcessing(true);
-    setProcessError(null);
-    try {
-      const imageDataUrl = await readFileAsDataUrl(preview.file);
-      const { base64, mimeType } = await generateEmptyRoomImage(imageDataUrl);
-      onReplace(base64ToFile(base64, mimeType, GENERATED_IMAGE_FILE_NAME));
-    } catch {
-      setProcessError("Something went wrong while processing the image. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [preview.file, onReplace]);
-
+function SelectedImage({ preview, onClear, onGenerated }: SelectedImageProps) {
   return (
     <div className="flex w-full flex-col items-center gap-6">
       <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900">
@@ -132,6 +123,40 @@ function SelectedImage({ preview, onClear, onReplace }: SelectedImageProps) {
         </button>
       </div>
 
+      {preview.isGenerated ? (
+        <AestheticSidebar />
+      ) : (
+        <ProcessImageButton file={preview.file} onGenerated={onGenerated} />
+      )}
+    </div>
+  );
+}
+
+interface ProcessImageButtonProps {
+  file: File;
+  onGenerated: (file: File) => void;
+}
+
+function ProcessImageButton({ file, onGenerated }: ProcessImageButtonProps) {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processError, setProcessError] = useState<string | null>(null);
+
+  const processImage = useCallback(async () => {
+    setIsProcessing(true);
+    setProcessError(null);
+    try {
+      const imageDataUrl = await readFileAsDataUrl(file);
+      const { base64, mimeType } = await generateEmptyRoomImage(imageDataUrl);
+      onGenerated(base64ToFile(base64, mimeType, GENERATED_IMAGE_FILE_NAME));
+    } catch {
+      setProcessError("Something went wrong while processing the image. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [file, onGenerated]);
+
+  return (
+    <>
       <button
         type="button"
         onClick={processImage}
@@ -144,7 +169,7 @@ function SelectedImage({ preview, onClear, onReplace }: SelectedImageProps) {
       {processError && (
         <p className="text-sm text-red-600 dark:text-red-400">{processError}</p>
       )}
-    </div>
+    </>
   );
 }
 
@@ -160,8 +185,8 @@ function RejectionList({ rejections }: { rejections: readonly FileRejection[] })
   );
 }
 
-function createPreview(file: File): ImagePreview {
-  return { file, previewUrl: URL.createObjectURL(file) };
+function createPreview(file: File, isGenerated: boolean): ImagePreview {
+  return { file, previewUrl: URL.createObjectURL(file), isGenerated };
 }
 
 function revokePreview(preview: ImagePreview): void {
