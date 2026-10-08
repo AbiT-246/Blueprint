@@ -4,12 +4,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { OpenAiModule } from './openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { TemplatesModule } from './templates/templates.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env', '../.env'] }),
     PrismaModule,
     OpenAiModule,
+    TemplatesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

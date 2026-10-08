@@ -8,10 +8,20 @@ datasource db {
 }
 
 enum DesignStyle {
-  MODERN
-  SCANDINAVIAN
-  JAPANDI
-  MINIMALIST
+  INDIE
+  COTTAGECORE
+  SOFT_GIRL
+  GRUNGE
+  WITCHCORE
+  E_GIRL
+  GALAXY
+  ART_HOE
+  ANIME
+  BOHO
+  KAWAII
+  DARK_ACADEMIA
+  VINTAGE
+  DORM
 }
 
 enum RoomStatus {
@@ -22,13 +32,14 @@ enum RoomStatus {
 }
 
 enum ItemCategory {
-  SOFA
-  COFFEE_TABLE
-  RUG
-  LAMP
-  PLANT
-  CHAIR
-  SHELF
+  FURNITURE
+  LIGHTING
+  WALL_DECOR
+  FLOOR_AND_TEXTILES
+  PLANTS_AND_NATURE
+  DECORATIVE_OBJECTS
+  ELECTRONICS
+  STORAGE_AND_ORGANIZATION
   OTHER
 }
 
@@ -78,23 +89,20 @@ model Room {
 
 model Template {
   id              String       @id @default(cuid())
-  name            String
   description     String?
-  style           DesignStyle
+  style           DesignStyle  @unique
   previewImageUrl String?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
   rooms         Room[]
   templateItems TemplateItem[]
-
-  @@index([style])
 }
 
 model Item {
   id          String       @id @default(cuid())
   title       String
-  imageUrl    String
+  imageUrl    String       @unique
   category    ItemCategory
   description String?
   embeddingId String?
@@ -143,6 +151,7 @@ model TemplateItem {
   template Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
   item     Item     @relation(fields: [itemId], references: [id], onDelete: Restrict)
 
+  @@unique([templateId, itemId])
   @@index([templateId])
   @@index([itemId])
 }
