@@ -52,3 +52,6 @@ next-env.d.ts
 .stylelintcache
 .cache
 .parcel-cache
+
+# raw 3D model sources (too large for git; optimized copies live in public/Models)
+/assets/source-models/

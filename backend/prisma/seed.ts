@@ -1,4 +1,4 @@
-import { DesignStyle, ItemCategory, Prisma, PrismaClient } from '@prisma/client';
+import { DesignStyle, ItemCategory, ItemPlacement, Prisma, PrismaClient } from '@prisma/client';
 
 interface TemplateSeed {
   style: DesignStyle;
@@ -6,30 +6,29 @@ interface TemplateSeed {
   previewImageFile: string;
 }
 
-/** Position values are fractions (0–1) of the canvas width/height, measured at the item's center. */
+/** Base-center position in room space (meters, Y up, camera looking down -Z); rotation in degrees around Y. */
 interface TemplatePlacement {
   positionX: number;
-  positionY: number;
-  zIndex: number;
+  positionZ: number;
+  rotation: number;
 }
+
+type ItemDimensions = Pick<Prisma.ItemCreateInput, 'widthMeters' | 'depthMeters' | 'heightMeters'>;
 
 interface ItemSeed {
   title: string;
-  imageFile: string;
+  thumbnailFile: string;
+  modelFile: string;
   category: ItemCategory;
+  placement: ItemPlacement;
+  dimensions: ItemDimensions;
   description: string;
   templatePlacements: Partial<Record<DesignStyle, TemplatePlacement>>;
 }
 
 const AESTHETICS_PUBLIC_PATH = '/Aesthetics';
 const ITEMS_PUBLIC_PATH = '/Items';
-
-const Z_INDEX = {
-  WALL: 0,
-  FLOOR: 1,
-  FOREGROUND: 2,
-  OVERHEAD: 3,
-} as const;
+const MODELS_PUBLIC_PATH = '/Models';
 
 const TEMPLATE_SEEDS: TemplateSeed[] = [
   {
@@ -90,75 +89,51 @@ const TEMPLATE_SEEDS: TemplateSeed[] = [
 
 const ITEM_SEEDS: ItemSeed[] = [
   {
-    title: 'Bed',
-    imageFile: 'Bed.png',
+    title: 'Green Boho Bed',
+    thumbnailFile: 'indie-green-bed.png',
+    modelFile: 'indie-green-bed.glb',
     category: ItemCategory.FURNITURE,
-    description: 'Cozy bed with layered bedding.',
+    placement: ItemPlacement.FLOOR,
+    dimensions: { widthMeters: 1.7, depthMeters: 1.79, heightMeters: 1.05 },
+    description: 'Boho bed with a green quilted cover and woven headboard.',
     templatePlacements: {
-      [DesignStyle.INDIE]: { positionX: 0.28, positionY: 0.72, zIndex: Z_INDEX.FLOOR },
+      [DesignStyle.INDIE]: { positionX: 0, positionZ: -3.5, rotation: 0 },
     },
   },
   {
-    title: 'Couch',
-    imageFile: 'Couch.png',
+    title: 'Rattan Sofa',
+    thumbnailFile: 'indie-couch.png',
+    modelFile: 'indie-couch.glb',
     category: ItemCategory.FURNITURE,
-    description: 'Relaxed lounge couch.',
+    placement: ItemPlacement.FLOOR,
+    dimensions: { widthMeters: 1.9, depthMeters: 0.95, heightMeters: 0.88 },
+    description: 'Dark green sofa with cane-panel arms, boho cushions and a fringed throw.',
     templatePlacements: {
-      [DesignStyle.INDIE]: { positionX: 0.72, positionY: 0.78, zIndex: Z_INDEX.FOREGROUND },
+      [DesignStyle.INDIE]: { positionX: -1.9, positionZ: -5, rotation: 0 },
     },
   },
   {
-    title: 'Desk',
-    imageFile: 'Desk.png',
+    title: 'Rattan Desk & Chair',
+    thumbnailFile: 'indie-desk.png',
+    modelFile: 'indie-desk.glb',
     category: ItemCategory.FURNITURE,
-    description: 'Compact desk for studying or crafting.',
+    placement: ItemPlacement.FLOOR,
+    dimensions: { widthMeters: 1.31, depthMeters: 1.14, heightMeters: 0.77 },
+    description: 'Light wood writing desk with cane drawer fronts and a matching cane-back chair.',
     templatePlacements: {
-      [DesignStyle.INDIE]: { positionX: 0.82, positionY: 0.58, zIndex: Z_INDEX.FLOOR },
+      [DesignStyle.INDIE]: { positionX: 2.1, positionZ: -5, rotation: 0 },
     },
   },
   {
-    title: 'Guitar',
-    imageFile: 'Guitar.png',
-    category: ItemCategory.DECORATIVE_OBJECTS,
-    description: 'Acoustic guitar that doubles as decor.',
-    templatePlacements: {
-      [DesignStyle.INDIE]: { positionX: 0.5, positionY: 0.65, zIndex: Z_INDEX.FOREGROUND },
-    },
-  },
-  {
-    title: 'Plant',
-    imageFile: 'Plant.png',
+    title: 'Monstera Plant',
+    thumbnailFile: 'indie-plant.png',
+    modelFile: 'indie-plant.glb',
     category: ItemCategory.PLANTS_AND_NATURE,
-    description: 'Leafy potted floor plant.',
+    placement: ItemPlacement.FLOOR,
+    dimensions: { widthMeters: 0.99, depthMeters: 0.96, heightMeters: 1.1 },
+    description: 'Monstera in a woven seagrass basket on a wooden plant stand.',
     templatePlacements: {
-      [DesignStyle.INDIE]: { positionX: 0.08, positionY: 0.75, zIndex: Z_INDEX.FOREGROUND },
-    },
-  },
-  {
-    title: 'Hanging Plant',
-    imageFile: 'Hanging Plant.png',
-    category: ItemCategory.PLANTS_AND_NATURE,
-    description: 'Trailing plant in a hanging planter.',
-    templatePlacements: {
-      [DesignStyle.INDIE]: { positionX: 0.6, positionY: 0.18, zIndex: Z_INDEX.OVERHEAD },
-    },
-  },
-  {
-    title: 'Rope Decor',
-    imageFile: 'Rope Decor.png',
-    category: ItemCategory.WALL_DECOR,
-    description: 'Macramé rope wall hanging.',
-    templatePlacements: {
-      [DesignStyle.INDIE]: { positionX: 0.28, positionY: 0.35, zIndex: Z_INDEX.WALL },
-    },
-  },
-  {
-    title: 'Decor',
-    imageFile: 'Decor.png',
-    category: ItemCategory.WALL_DECOR,
-    description: 'Set of woven rattan and seagrass wall baskets.',
-    templatePlacements: {
-      [DesignStyle.INDIE]: { positionX: 0.75, positionY: 0.35, zIndex: Z_INDEX.WALL },
+      [DesignStyle.INDIE]: { positionX: 2.4, positionZ: -2.8, rotation: 0 },
     },
   },
 ];
@@ -218,14 +193,21 @@ async function seedItems(): Promise<number> {
   }
 }
 
-function upsertItem(tx: Prisma.TransactionClient, { title, imageFile, category, description }: ItemSeed) {
-  const imageUrl = `${ITEMS_PUBLIC_PATH}/${imageFile}`;
-  const data = { title, category, description };
+function upsertItem(tx: Prisma.TransactionClient, seed: ItemSeed) {
+  const modelUrl = `${MODELS_PUBLIC_PATH}/${seed.modelFile}`;
+  const data = {
+    title: seed.title,
+    imageUrl: `${ITEMS_PUBLIC_PATH}/${seed.thumbnailFile}`,
+    category: seed.category,
+    placement: seed.placement,
+    description: seed.description,
+    ...seed.dimensions,
+  };
 
   return tx.item.upsert({
-    where: { imageUrl },
+    where: { modelUrl },
     update: data,
-    create: { imageUrl, ...data },
+    create: { modelUrl, ...data },
     select: { id: true },
   });
 }
