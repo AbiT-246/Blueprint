@@ -6,9 +6,13 @@ import SidebarStatusMessage from "@/components/SidebarStatusMessage";
 import TemplateItemList from "@/components/TemplateItemList";
 import { SIDEBAR_CARD_CLASS, SIDEBAR_CARD_LABEL_CLASS, SIDEBAR_IMAGE_SIZES } from "@/components/sidebarStyles";
 import { type AsyncResource, useAsyncResource } from "@/hooks/useAsyncResource";
-import { getTemplates, type TemplateSummary } from "@/lib/api/templates";
+import { getTemplates, type TemplateItemSummary, type TemplateSummary } from "@/lib/api/templates";
 
-export default function AestheticSidebar() {
+interface AestheticSidebarProps {
+  onItemSelect: (item: TemplateItemSummary) => void;
+}
+
+export default function AestheticSidebar({ onItemSelect }: AestheticSidebarProps) {
   const templatesResource = useAsyncResource(getTemplates);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummary | null>(null);
 
@@ -22,7 +26,11 @@ export default function AestheticSidebar() {
       </header>
       <div className="flex-1 overflow-y-auto px-6 py-5">
         {selectedTemplate ? (
-          <TemplateItemList key={selectedTemplate.id} templateId={selectedTemplate.id} />
+          <TemplateItemList
+            key={selectedTemplate.id}
+            templateId={selectedTemplate.id}
+            onItemSelect={onItemSelect}
+          />
         ) : (
           <TemplateList resource={templatesResource} onSelect={setSelectedTemplate} />
         )}

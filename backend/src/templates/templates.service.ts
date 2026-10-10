@@ -12,6 +12,17 @@ import {
   TemplateSummaryFields,
 } from './interfaces/template-summary.interface';
 
+const TEMPLATE_ITEM_SUMMARY_SELECT = {
+  id: true,
+  title: true,
+  imageUrl: true,
+  modelUrl: true,
+  placement: true,
+  widthMeters: true,
+  depthMeters: true,
+  heightMeters: true,
+} satisfies Record<keyof TemplateItemSummary, true>;
+
 @Injectable()
 export class TemplatesService {
   private readonly logger = new Logger(TemplatesService.name);
@@ -60,9 +71,7 @@ export class TemplatesService {
         where: { id: templateId },
         select: {
           templateItems: {
-            select: {
-              item: { select: { id: true, title: true, imageUrl: true } },
-            },
+            select: { item: { select: TEMPLATE_ITEM_SUMMARY_SELECT } },
             orderBy: { item: { title: 'asc' } },
           },
         },

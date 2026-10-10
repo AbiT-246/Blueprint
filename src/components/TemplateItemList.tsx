@@ -7,8 +7,13 @@ import { SIDEBAR_CARD_CLASS, SIDEBAR_CARD_LABEL_CLASS, SIDEBAR_IMAGE_SIZES } fro
 import { useAsyncResource } from "@/hooks/useAsyncResource";
 import { getTemplateItems, type TemplateItemSummary } from "@/lib/api/templates";
 
+interface TemplateItemListProps {
+  templateId: string;
+  onItemSelect: (item: TemplateItemSummary) => void;
+}
+
 /** Render with `key={templateId}` so switching templates resets the loading state. */
-export default function TemplateItemList({ templateId }: { templateId: string }) {
+export default function TemplateItemList({ templateId, onItemSelect }: TemplateItemListProps) {
   const loadItems = useCallback(() => getTemplateItems(templateId), [templateId]);
   const itemsResource = useAsyncResource(loadItems);
 
@@ -24,16 +29,21 @@ export default function TemplateItemList({ templateId }: { templateId: string })
     <ul className="flex flex-col gap-4">
       {itemsResource.data.map((item) => (
         <li key={item.id}>
-          <ItemCard item={item} />
+          <ItemCard item={item} onSelect={onItemSelect} />
         </li>
       ))}
     </ul>
   );
 }
 
-function ItemCard({ item }: { item: TemplateItemSummary }) {
+interface ItemCardProps {
+  item: TemplateItemSummary;
+  onSelect: (item: TemplateItemSummary) => void;
+}
+
+function ItemCard({ item, onSelect }: ItemCardProps) {
   return (
-    <button type="button" className={SIDEBAR_CARD_CLASS}>
+    <button type="button" onClick={() => onSelect(item)} className={SIDEBAR_CARD_CLASS}>
       <div className="relative aspect-square w-full bg-zinc-50 dark:bg-zinc-900">
         <Image src={item.imageUrl} alt={item.title} fill sizes={SIDEBAR_IMAGE_SIZES} className="object-contain p-4" />
       </div>

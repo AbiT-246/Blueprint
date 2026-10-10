@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone, type Accept, type FileRejection } from "react-dropzone";
-import AestheticSidebar from "@/components/AestheticSidebar";
+import RoomEditor from "@/components/RoomEditor";
 import { generateEmptyRoomImage } from "@/lib/api/openai";
 import { base64ToFile, readFileAsDataUrl } from "@/lib/files";
 
@@ -66,6 +66,10 @@ export default function ImageDropzone() {
       onDropAccepted,
     });
 
+  if (preview?.isGenerated) {
+    return <RoomEditor imageUrl={preview.previewUrl} onClose={clearPreview} />;
+  }
+
   if (preview) {
     return (
       <SelectedImage
@@ -123,11 +127,7 @@ function SelectedImage({ preview, onClear, onGenerated }: SelectedImageProps) {
         </button>
       </div>
 
-      {preview.isGenerated ? (
-        <AestheticSidebar />
-      ) : (
-        <ProcessImageButton file={preview.file} onGenerated={onGenerated} />
-      )}
+      <ProcessImageButton file={preview.file} onGenerated={onGenerated} />
     </div>
   );
 }

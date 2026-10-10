@@ -43,6 +43,13 @@ enum ItemCategory {
   OTHER
 }
 
+/// Which surface an item attaches to in the 3D room editor.
+enum ItemPlacement {
+  FLOOR
+  WALL
+  CEILING
+}
+
 enum Retailer {
   WAYFAIR
   IKEA
@@ -88,26 +95,34 @@ model Room {
 }
 
 model Template {
-  id              String       @id @default(cuid())
+  id              String      @id @default(cuid())
   description     String?
-  style           DesignStyle  @unique
+  style           DesignStyle @unique
   previewImageUrl String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   rooms         Room[]
   templateItems TemplateItem[]
 }
 
 model Item {
-  id          String       @id @default(cuid())
-  title       String
-  imageUrl    String       @unique
-  category    ItemCategory
-  description String?
-  embeddingId String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id           String        @id @default(cuid())
+  title        String
+  /// 2D thumbnail shown in item pickers.
+  imageUrl     String
+  /// glTF binary (.glb) rendered in the 3D room editor.
+  modelUrl     String        @unique
+  category     ItemCategory
+  placement    ItemPlacement @default(FLOOR)
+  /// Real-world bounding box; models are scaled to these dimensions when placed.
+  widthMeters  Float
+  depthMeters  Float
+  heightMeters Float
+  description  String?
+  embeddingId  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   roomItems     RoomItem[]
   templateItems TemplateItem[]
@@ -117,15 +132,17 @@ model Item {
   @@index([title])
 }
 
+/// Position is the item's base center in room space (meters, Y up, camera looking down -Z).
 model RoomItem {
-  id       String @id @default(cuid())
-  roomId   String
-  itemId   String
+  id        String   @id @default(cuid())
+  roomId    String
+  itemId    String
   positionX Float
-  positionY Float
-  scale     Float @default(1)
-  rotation  Float @default(0)
-  zIndex    Int   @default(0)
+  positionY Float    @default(0)
+  positionZ Float
+  scale     Float    @default(1)
+  /// Degrees around the vertical (Y) axis.
+  rotation  Float    @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -136,15 +153,17 @@ model RoomItem {
   @@index([itemId])
 }
 
+/// Position is the item's base center in room space (meters, Y up, camera looking down -Z).
 model TemplateItem {
-  id         String @id @default(cuid())
+  id         String   @id @default(cuid())
   templateId String
   itemId     String
   positionX  Float
-  positionY  Float
-  scale      Float @default(1)
-  rotation   Float @default(0)
-  zIndex     Int   @default(0)
+  positionY  Float    @default(0)
+  positionZ  Float
+  scale      Float    @default(1)
+  /// Degrees around the vertical (Y) axis.
+  rotation   Float    @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -157,17 +176,17 @@ model TemplateItem {
 }
 
 model ProductOffer {
-  id           String   @id @default(cuid())
-  itemId       String
-  retailer     Retailer
-  title        String
-  priceCents   Int
-  currency     String   @default("USD")
-  productUrl   String
-  imageUrl     String?
-  externalId   String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id         String   @id @default(cuid())
+  itemId     String
+  retailer   Retailer
+  title      String
+  priceCents Int
+  currency   String   @default("USD")
+  productUrl String
+  imageUrl   String?
+  externalId String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
