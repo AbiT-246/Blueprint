@@ -1,6 +1,7 @@
 import { Box3, Group, Mesh, type Material, type Object3D, Texture, Vector3 } from "three";
 import { type GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+import type { ModelPivot } from "./placement/PlacementStrategy";
 
 export interface ModelDimensions {
   widthMeters: number;
@@ -11,17 +12,17 @@ export interface ModelDimensions {
 /**
  * Loads each glTF once and hands out lightweight clones that share geometry and materials.
  * Clones are normalized: scaled uniformly to fit inside the item's real-world dimensions,
- * and wrapped in a pivot group whose origin is the model's base center.
+ * and wrapped in a pivot group whose origin is the model's base center or center.
  */
 export class ModelLibrary {
   private readonly loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
   private readonly cache = new Map<string, Promise<GLTF>>();
 
-  async instantiate(modelUrl: string, dimensions: ModelDimensions): Promise<Group> {
+  async instantiate(modelUrl: string, dimensions: ModelDimensions, pivot: ModelPivot): Promise<Group> {
     const gltf = await this.load(modelUrl);
     const model = gltf.scene.clone(true);
     enableShadows(model);
-    return createNormalizedPivot(model, dimensions);
+    return createNormalizedPivot(model, dimensions, pivot);
   }
 
   dispose(): void {
@@ -44,7 +45,7 @@ export class ModelLibrary {
   }
 }
 
-function createNormalizedPivot(model: Object3D, dimensions: ModelDimensions): Group {
+function createNormalizedPivot(model: Object3D, dimensions: ModelDimensions, pivot: ModelPivot): Group {
   const bounds = new Box3().setFromObject(model);
   const size = bounds.getSize(new Vector3());
   const scale = Math.min(
@@ -53,13 +54,14 @@ function createNormalizedPivot(model: Object3D, dimensions: ModelDimensions): Gr
     dimensions.depthMeters / size.z,
   );
 
-  const baseCenter = new Vector3((bounds.min.x + bounds.max.x) / 2, bounds.min.y, (bounds.min.z + bounds.max.z) / 2);
+  const origin = bounds.getCenter(new Vector3());
+  if (pivot === "base") origin.y = bounds.min.y;
   model.scale.setScalar(scale);
-  model.position.copy(baseCenter).multiplyScalar(-scale);
+  model.position.copy(origin).multiplyScalar(-scale);
 
-  const pivot = new Group();
-  pivot.add(model);
-  return pivot;
+  const root = new Group();
+  root.add(model);
+  return root;
 }
 
 function enableShadows(model: Object3D): void {

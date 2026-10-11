@@ -1,7 +1,8 @@
 import { Box3, Box3Helper, type Camera, type Object3D, Raycaster, type Scene, Vector2, Vector3 } from "three";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import { clampItemScale, ITEM_SCALE } from "./itemScale";
-import { getScaledSize, type ItemSelection, type PlacedItem } from "./PlacedItem";
+import { getPlacementSize, type ItemSelection, type PlacedItem } from "./PlacedItem";
+import type { RotationAxis } from "./placement/PlacementStrategy";
 
 export interface ItemInteractionCallbacks {
   onChange: () => void;
@@ -29,7 +30,7 @@ const TEXT_ENTRY_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
 
 /**
  * Selects, drags, rotates, resizes and removes placed items. Dragging projects the pointer onto the item's
- * placement surface; rotation uses a Y-axis ring gizmo (or the R key for quarter turns).
+ * placement surface; rotation uses a ring gizmo around the strategy's rotation axis (or the R key for quarter turns).
  */
 export class ItemInteractionController {
   private readonly raycaster = new Raycaster();
@@ -61,7 +62,10 @@ export class ItemInteractionController {
   select(item: PlacedItem | null): void {
     this.selected = item;
     this.rotateControls.detach();
-    if (item?.strategy.canRotate) this.rotateControls.attach(item.root);
+    if (item) {
+      showOnlyAxis(this.rotateControls, item.strategy.rotationAxis);
+      this.rotateControls.attach(item.root);
+    }
 
     this.selectionOutline.visible = item !== null;
     this.refreshSelection();
@@ -75,8 +79,7 @@ export class ItemInteractionController {
 
     item.scale = clampItemScale(scale);
     item.root.scale.setScalar(item.scale);
-    item.root.position.copy(item.strategy.constrain(item.root.position, getScaledSize(item)));
-    this.refreshSelection();
+    this.keepOnSurface(item);
     this.notifySelection();
     this.callbacks.onChange();
   }
@@ -109,7 +112,7 @@ export class ItemInteractionController {
   }
 
   private readonly handleGizmoChange = (): void => {
-    this.refreshSelection();
+    if (this.selected) this.keepOnSurface(this.selected);
     this.callbacks.onChange();
   };
 
@@ -143,7 +146,7 @@ export class ItemInteractionController {
     const surfacePoint = this.projectOntoSurface(event, item);
     if (!surfacePoint) return;
 
-    item.root.position.copy(item.strategy.constrain(surfacePoint.add(grabOffset), getScaledSize(item)));
+    item.root.position.copy(item.strategy.constrain(surfacePoint.add(grabOffset), getPlacementSize(item)));
     this.refreshSelection();
     this.callbacks.onChange();
   };
@@ -161,9 +164,9 @@ export class ItemInteractionController {
   private readonly handleKeyDown = (event: KeyboardEvent): void => {
     if (!this.selected || isTextEntryTarget(event.target)) return;
 
-    if (event.key.toLowerCase() === ROTATE_KEY && this.selected.strategy.canRotate) {
-      this.selected.root.rotation.y += QUARTER_TURN;
-      this.refreshSelection();
+    if (event.key.toLowerCase() === ROTATE_KEY) {
+      this.selected.root.rotation[this.selected.strategy.rotationAxis] += QUARTER_TURN;
+      this.keepOnSurface(this.selected);
       this.callbacks.onChange();
     } else if (GROW_KEYS.has(event.key)) {
       this.scaleSelected(this.selected.scale + ITEM_SCALE.keyStep);
@@ -175,6 +178,12 @@ export class ItemInteractionController {
       this.removeSelected();
     }
   };
+
+  /** Re-applies the surface constraints after a resize or rotation changes the item's footprint. */
+  private keepOnSurface(item: PlacedItem): void {
+    item.root.position.copy(item.strategy.constrain(item.root.position, getPlacementSize(item)));
+    this.refreshSelection();
+  }
 
   private notifySelection(): void {
     const item = this.selected;
@@ -218,10 +227,14 @@ export class ItemInteractionController {
 function createRotateControls(camera: Camera, canvas: HTMLCanvasElement): TransformControls {
   const controls = new TransformControls(camera, canvas);
   controls.setMode("rotate");
-  controls.showX = false;
-  controls.showZ = false;
   controls.setSize(ROTATE_GIZMO_SIZE);
   return controls;
+}
+
+function showOnlyAxis(controls: TransformControls, axis: RotationAxis): void {
+  controls.showX = false;
+  controls.showY = axis === "y";
+  controls.showZ = axis === "z";
 }
 
 function isTextEntryTarget(target: EventTarget | null): boolean {

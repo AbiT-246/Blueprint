@@ -71,7 +71,7 @@ export default function RoomCanvas({
   return (
     <div ref={containerRef} className="relative h-full w-full overflow-hidden">
       {hasBackgroundError && (
-        <p className="absolute inset-0 flex items-center justify-center text-sm text-red-600 dark:text-red-400">
+        <p className="absolute inset-0 flex items-center justify-center text-sm text-red-400">
           Unable to load the room image.
         </p>
       )}

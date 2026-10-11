@@ -1,6 +1,6 @@
 "use client";
 
-import { OVERLAY_PANEL_CLASS } from "@/components/overlayStyles";
+import { OVERLAY_PANEL_CLASS, OVERLAY_SLIDER_CLASS } from "@/components/overlayStyles";
 import {
   CAMERA_SETTING_RANGES,
   type CameraSettings,
@@ -28,12 +28,12 @@ interface PerspectivePanelProps {
 export default function PerspectivePanel({ settings, onChange }: PerspectivePanelProps) {
   return (
     <div className={`${OVERLAY_PANEL_CLASS} w-64`}>
-      <p className="text-zinc-600 dark:text-zinc-400">Line the blue grid up with the floor in your photo.</p>
+      <p className="text-mist">Line the purple grid up with the floor in your photo.</p>
       {SETTING_FIELDS.map(({ key, label, unit }) => (
         <label key={key} className="flex flex-col gap-1">
-          <span className="flex justify-between font-medium text-black dark:text-zinc-50">
+          <span className="flex justify-between font-medium">
             {label}
-            <span className="text-zinc-500 tabular-nums">
+            <span className="text-mist tabular-nums">
               {settings[key]}
               {unit}
             </span>
@@ -43,13 +43,14 @@ export default function PerspectivePanel({ settings, onChange }: PerspectivePane
             {...CAMERA_SETTING_RANGES[key]}
             value={settings[key]}
             onChange={(event) => onChange({ ...settings, [key]: Number(event.target.value) })}
+            className={OVERLAY_SLIDER_CLASS}
           />
         </label>
       ))}
       <button
         type="button"
         onClick={() => onChange(DEFAULT_CAMERA_SETTINGS)}
-        className="self-start text-zinc-500 underline hover:text-black dark:hover:text-zinc-50"
+        className="self-start text-mist underline underline-offset-4 transition-colors hover:text-ivory"
       >
         Reset
       </button>

@@ -6,9 +6,14 @@ interface TemplateSeed {
   previewImageFile: string;
 }
 
-/** Base-center position in room space (meters, Y up, camera looking down -Z); rotation in degrees around Y. */
+/**
+ * Position in room space (meters, Y up, camera looking down -Z). Floor items use their base center and omit
+ * positionY; wall items use their center and set positionY to its height. The back wall is at z = -6.
+ * Rotation is in degrees around Y for floor items and around Z (out of the wall) for wall items.
+ */
 interface TemplatePlacement {
   positionX: number;
+  positionY?: number;
   positionZ: number;
   rotation: number;
 }
@@ -134,6 +139,30 @@ const ITEM_SEEDS: ItemSeed[] = [
     description: 'Monstera in a woven seagrass basket on a wooden plant stand.',
     templatePlacements: {
       [DesignStyle.INDIE]: { positionX: 2.4, positionZ: -2.8, rotation: 0 },
+    },
+  },
+  {
+    title: 'Boho Arch Print',
+    thumbnailFile: 'indie-painting.png',
+    modelFile: 'indie-painting.glb',
+    category: ItemCategory.WALL_DECOR,
+    placement: ItemPlacement.WALL,
+    dimensions: { widthMeters: 0.6, depthMeters: 0.035, heightMeters: 0.6 },
+    description: 'Abstract boho print of a terracotta vase, leafy stem and rainbow arch in a light wood frame.',
+    templatePlacements: {
+      [DesignStyle.INDIE]: { positionX: 2.1, positionY: 1.5, positionZ: -5.98, rotation: 0 },
+    },
+  },
+  {
+    title: 'Woven Wall Plates',
+    thumbnailFile: 'indie-decor.png',
+    modelFile: 'indie-decor.glb',
+    category: ItemCategory.WALL_DECOR,
+    placement: ItemPlacement.WALL,
+    dimensions: { widthMeters: 1, depthMeters: 0.05, heightMeters: 0.66 },
+    description: 'Cluster of woven rattan, seagrass and carved white wall plates in natural tones.',
+    templatePlacements: {
+      [DesignStyle.INDIE]: { positionX: -1.9, positionY: 1.55, positionZ: -5.975, rotation: 0 },
     },
   },
 ];

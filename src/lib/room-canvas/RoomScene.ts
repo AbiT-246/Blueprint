@@ -17,7 +17,7 @@ import { type CameraSettings, DEFAULT_CAMERA_SETTINGS } from "./cameraSettings";
 import { ItemInteractionController } from "./ItemInteractionController";
 import { type ModelDimensions, ModelLibrary } from "./ModelLibrary";
 import { ITEM_SCALE } from "./itemScale";
-import { getScaledSize, type ItemSelection, type PlacedItem } from "./PlacedItem";
+import { getPlacementSize, type ItemSelection, type PlacedItem } from "./PlacedItem";
 import { createPlacementStrategies } from "./placement/createPlacementStrategies";
 import { applyCameraSettings, createRoomCamera } from "./RoomCamera";
 import { DEFAULT_ROOM_BOUNDS } from "./roomBounds";
@@ -92,13 +92,14 @@ export class RoomScene {
   }
 
   async addItem(item: PlaceableItem): Promise<void> {
-    const root = await this.modelLibrary.instantiate(item.modelUrl, item);
+    const strategy = this.strategies[item.placement];
+    const root = await this.modelLibrary.instantiate(item.modelUrl, item, strategy.pivot);
     if (this.isDisposed) return;
 
     const placed: PlacedItem = {
       title: item.title,
       root,
-      strategy: this.strategies[item.placement],
+      strategy,
       baseSize: new Box3().setFromObject(root).getSize(new Vector3()),
       scale: ITEM_SCALE.default,
     };
@@ -156,7 +157,7 @@ export class RoomScene {
     const raycaster = new Raycaster();
     raycaster.setFromCamera(strategy.spawnScreenPoint, this.camera);
     const hit = raycaster.ray.intersectPlane(strategy.dragPlane, new Vector3());
-    return strategy.constrain(hit ?? strategy.dragPlane.coplanarPoint(new Vector3()), getScaledSize(item));
+    return strategy.constrain(hit ?? strategy.dragPlane.coplanarPoint(new Vector3()), getPlacementSize(item));
   }
 
   /** Sizes the canvas to the photo's aspect ratio (fitted inside the container) so the camera and photo line up. */
