@@ -10,7 +10,7 @@ import { type CameraSettings, DEFAULT_CAMERA_SETTINGS } from "@/lib/room-canvas/
 import type { ItemSelection } from "@/lib/room-canvas/PlacedItem";
 
 const OVERLAY_BUTTON_CLASS =
-  "flex h-8 items-center justify-center rounded-full bg-black/60 px-3 text-sm text-white transition-colors hover:bg-black/80";
+  "flex h-8 items-center justify-center rounded-full border border-night-line bg-night-raised/90 px-3 text-sm text-ivory backdrop-blur transition-colors hover:bg-night-raised";
 
 interface RoomEditorProps {
   imageUrl: string;
@@ -32,7 +32,7 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-20 bg-zinc-100 dark:bg-zinc-900">
+    <div className="fixed inset-0 z-20 bg-night font-sans">
       <div className="absolute inset-y-0 right-80 left-0">
         <RoomCanvas
           ref={canvasRef}
@@ -69,7 +69,7 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
           </div>
         )}
 
-        <p className="pointer-events-none absolute right-4 bottom-4 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
+        <p className="pointer-events-none absolute right-4 bottom-4 rounded-full bg-night-raised/90 px-3 py-1 text-xs text-mist backdrop-blur">
           Drag to move · Ring or R to rotate · +/− to resize · Delete to remove
         </p>
 

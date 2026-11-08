@@ -1,6 +1,6 @@
 "use client";
 
-import { OVERLAY_PANEL_CLASS } from "@/components/overlayStyles";
+import { OVERLAY_PANEL_CLASS, OVERLAY_SLIDER_CLASS } from "@/components/overlayStyles";
 import { ITEM_SCALE } from "@/lib/room-canvas/itemScale";
 import type { ItemSelection } from "@/lib/room-canvas/PlacedItem";
 
@@ -15,9 +15,9 @@ interface SelectedItemToolbarProps {
 export default function SelectedItemToolbar({ selection, onScaleChange, onRemove }: SelectedItemToolbarProps) {
   return (
     <div className={`${OVERLAY_PANEL_CLASS} w-56`}>
-      <p className="truncate font-medium text-black dark:text-zinc-50">{selection.title}</p>
+      <p className="truncate font-serif text-base">{selection.title}</p>
       <label className="flex flex-col gap-1">
-        <span className="flex justify-between text-zinc-600 dark:text-zinc-400">
+        <span className="flex justify-between text-mist">
           Size
           <span className="tabular-nums">{Math.round(selection.scale * PERCENT)}%</span>
         </span>
@@ -28,12 +28,13 @@ export default function SelectedItemToolbar({ selection, onScaleChange, onRemove
           step={ITEM_SCALE.step}
           value={selection.scale}
           onChange={(event) => onScaleChange(Number(event.target.value))}
+          className={OVERLAY_SLIDER_CLASS}
         />
       </label>
       <button
         type="button"
         onClick={onRemove}
-        className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white transition-colors hover:bg-red-700"
+        className="rounded-full border border-red-400/60 px-3 py-1.5 font-medium text-red-300 transition-colors hover:bg-red-400/15"
       >
         Remove
       </button>

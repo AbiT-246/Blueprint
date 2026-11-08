@@ -17,10 +17,10 @@ export default function AestheticSidebar({ onItemSelect }: AestheticSidebarProps
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummary | null>(null);
 
   return (
-    <aside className="fixed inset-y-0 right-0 z-10 flex w-80 flex-col border-l border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-      <header className="flex items-center gap-2 border-b border-zinc-200 px-6 py-5 dark:border-zinc-800">
+    <aside className="fixed inset-y-0 right-0 z-10 flex w-80 flex-col border-l border-night-line bg-night">
+      <header className="flex items-center gap-2 border-b border-night-line px-6 py-5">
         {selectedTemplate && <BackButton onClick={() => setSelectedTemplate(null)} />}
-        <h2 className="text-xl font-semibold text-black dark:text-zinc-50">
+        <h2 className="font-serif text-2xl text-ivory">
           {selectedTemplate ? selectedTemplate.label : "Pick your aesthetic"}
         </h2>
       </header>
@@ -45,7 +45,7 @@ function BackButton({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label="Back to aesthetics"
-      className="-ml-2 rounded-md p-1 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-black dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+      className="-ml-2 rounded-md p-1 text-mist transition-colors hover:bg-night-raised hover:text-ivory"
     >
       <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="size-5">
         <path
@@ -96,7 +96,7 @@ function TemplateCard({ template, onSelect }: TemplateCardProps) {
       className={SIDEBAR_CARD_CLASS}
     >
       {template.previewImageUrl && (
-        <div className="relative aspect-video w-full bg-zinc-100 dark:bg-zinc-900">
+        <div className="relative aspect-video w-full bg-night-raised">
           <Image
             src={template.previewImageUrl}
             alt={`${template.label} room`}

@@ -44,7 +44,7 @@ interface ItemCardProps {
 function ItemCard({ item, onSelect }: ItemCardProps) {
   return (
     <button type="button" onClick={() => onSelect(item)} className={SIDEBAR_CARD_CLASS}>
-      <div className="relative aspect-square w-full bg-zinc-50 dark:bg-zinc-900">
+      <div className="relative aspect-square w-full bg-night-raised">
         <Image src={item.imageUrl} alt={item.title} fill sizes={SIDEBAR_IMAGE_SIZES} className="object-contain p-4" />
       </div>
       <span className={SIDEBAR_CARD_LABEL_CLASS}>{item.title}</span>

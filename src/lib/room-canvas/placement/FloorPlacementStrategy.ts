@@ -7,7 +7,8 @@ const SPAWN_SCREEN_POINT = new Vector2(0, -0.35);
 /** Items stand on the floor (y = 0), can be rotated, and stay between the camera and the back wall. */
 export class FloorPlacementStrategy implements PlacementStrategy {
   readonly dragPlane = new Plane(new Vector3(0, 1, 0), 0);
-  readonly canRotate = true;
+  readonly rotationAxis = "y";
+  readonly pivot = "base";
   readonly spawnScreenPoint = SPAWN_SCREEN_POINT;
 
   constructor(private readonly bounds: RoomBounds) {}

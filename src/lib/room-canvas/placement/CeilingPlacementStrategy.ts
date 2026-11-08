@@ -7,7 +7,8 @@ const SPAWN_SCREEN_POINT = new Vector2(0, 0.7);
 /** Items hang from the ceiling (their top touches it), can be rotated, and slide across it. */
 export class CeilingPlacementStrategy implements PlacementStrategy {
   readonly dragPlane: Plane;
-  readonly canRotate = true;
+  readonly rotationAxis = "y";
+  readonly pivot = "base";
   readonly spawnScreenPoint = SPAWN_SCREEN_POINT;
 
   constructor(private readonly bounds: RoomBounds) {
