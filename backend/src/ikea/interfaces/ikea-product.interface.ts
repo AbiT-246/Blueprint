@@ -27,3 +27,30 @@ export interface IkeaMoreProductsResponse {
     productWindow?: IkeaProduct[];
   };
 }
+
+export interface IkeaSearchResultItem {
+  product?: IkeaProduct;
+}
+
+export interface IkeaSearchResultPage {
+  searchPhrase?: string;
+  products?: {
+    badge?: number;
+    main?: {
+      items?: IkeaSearchResultItem[];
+      start?: number;
+      end?: number;
+      max?: number;
+    };
+  };
+}
+
+export interface IkeaSearchResultPageResponse {
+  searchResultPage?: IkeaSearchResultPage;
+}
+
+export interface IkeaKeywordSearchResponse {
+  searchPhrase: string;
+  productCount: number;
+  products: IkeaProduct[];
+}

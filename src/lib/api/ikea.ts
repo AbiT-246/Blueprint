@@ -36,6 +36,12 @@ export interface IkeaMoreProductsResponse {
   };
 }
 
+export interface IkeaKeywordSearchResponse {
+  searchPhrase: string;
+  productCount: number;
+  products: IkeaProduct[];
+}
+
 export function getIkeaCategories(): Promise<IkeaCategory[]> {
   return getJson<IkeaCategory[]>("/ikea/categories");
 }
@@ -62,6 +68,17 @@ export function getIkeaMoreProducts(
     end: String(end),
   });
   return getJson<IkeaMoreProductsResponse>(`/ikea/products/more?${query.toString()}`);
+}
+
+export function searchIkeaProducts(
+  keyword: string,
+  size = 24,
+): Promise<IkeaKeywordSearchResponse> {
+  const query = new URLSearchParams({
+    q: keyword,
+    size: String(size),
+  });
+  return getJson<IkeaKeywordSearchResponse>(`/ikea/search?${query.toString()}`);
 }
 
 export function getIkeaProduct(productId: string): Promise<unknown> {

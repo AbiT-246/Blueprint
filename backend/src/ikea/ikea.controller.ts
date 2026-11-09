@@ -7,9 +7,11 @@ import {
 } from '@nestjs/common';
 import { GetMoreProductsDto } from './dto/get-more-products.dto';
 import { GetProductsDto } from './dto/get-products.dto';
+import { SearchProductsDto } from './dto/search-products.dto';
 import { IkeaService } from './ikea.service';
 import { IkeaCategory } from './interfaces/ikea-category.interface';
 import {
+  IkeaKeywordSearchResponse,
   IkeaMoreProductsResponse,
   IkeaProductsByCategoryResponse,
 } from './interfaces/ikea-product.interface';
@@ -45,6 +47,13 @@ export class IkeaController {
       query.start,
       query.end,
     );
+  }
+
+  @Get('search')
+  searchProducts(
+    @Query() { q, size }: SearchProductsDto,
+  ): Promise<IkeaKeywordSearchResponse> {
+    return this.ikeaService.searchProductsByKeyword(q.trim(), size);
   }
 
   @Get('product/:productId')

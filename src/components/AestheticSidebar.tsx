@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import AestheticSearchPanel from "@/components/AestheticSearchPanel";
 import IkeaBrowsePanel from "@/components/IkeaBrowsePanel";
 import SidebarStatusMessage from "@/components/SidebarStatusMessage";
-import TemplateItemList from "@/components/TemplateItemList";
 import {
   SIDEBAR_CARD_CLASS,
   SIDEBAR_CARD_LABEL_CLASS,
@@ -13,19 +13,15 @@ import {
 } from "@/components/sidebarStyles";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
 import type { IkeaCategory, IkeaProduct } from "@/lib/api/ikea";
-import { getTemplates, type TemplateItemSummary, type TemplateSummary } from "@/lib/api/templates";
+import { getTemplates, type TemplateSummary } from "@/lib/api/templates";
 
 type SidebarMode = "choice" | "templates" | "ikea";
 
 interface AestheticSidebarProps {
-  onItemSelect: (item: TemplateItemSummary) => void;
   onIkeaProductSelect: (product: IkeaProduct) => void;
 }
 
-export default function AestheticSidebar({
-  onItemSelect,
-  onIkeaProductSelect,
-}: AestheticSidebarProps) {
+export default function AestheticSidebar({ onIkeaProductSelect }: AestheticSidebarProps) {
   const [mode, setMode] = useState<SidebarMode>("choice");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummary | null>(null);
   const [selectedIkeaCategory, setSelectedIkeaCategory] = useState<IkeaCategory | null>(null);
@@ -70,10 +66,10 @@ export default function AestheticSidebar({
             onProductSelect={onIkeaProductSelect}
           />
         ) : selectedTemplate ? (
-          <TemplateItemList
+          <AestheticSearchPanel
             key={selectedTemplate.id}
-            templateId={selectedTemplate.id}
-            onItemSelect={onItemSelect}
+            aestheticLabel={selectedTemplate.label}
+            onProductSelect={onIkeaProductSelect}
           />
         ) : (
           <TemplateList onSelect={setSelectedTemplate} />
@@ -134,10 +130,10 @@ function SourceChoicePanel({
       <p className="text-sm leading-relaxed text-mist">Your room has been scanned!</p>
       <div className="flex flex-col gap-3">
         <button type="button" onClick={onUseTemplates} className={SIDEBAR_OPTION_BUTTON_CLASS}>
-          Use templates
+          Shop by Theme
         </button>
         <button type="button" onClick={onShopIkea} className={SIDEBAR_OPTION_BUTTON_CLASS}>
-          Shop directly from IKEA
+          Shop by Product
         </button>
       </div>
     </div>
