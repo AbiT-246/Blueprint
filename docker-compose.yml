@@ -35,10 +35,8 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-blueprint}:${POSTGRES_PASSWORD:-blueprint}@postgres:5432/${POSTGRES_DB:-blueprint}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      EBAY_CLIENT_ID: ${EBAY_CLIENT_ID}
-      EBAY_CLIENT_SECRET: ${EBAY_CLIENT_SECRET}
-      EBAY_ENV: ${EBAY_ENV:-production}
-      EBAY_MARKETPLACE_ID: ${EBAY_MARKETPLACE_ID:-EBAY_US}
+      IKEA_COUNTRY: ${IKEA_COUNTRY:-ca}
+      IKEA_LANGUAGE: ${IKEA_LANGUAGE:-en}
     depends_on:
       postgres:
         condition: service_healthy

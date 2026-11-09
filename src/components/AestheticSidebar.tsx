@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import EbaySearchPanel from "@/components/EbaySearchPanel";
+import IkeaBrowsePanel from "@/components/IkeaBrowsePanel";
 import SidebarStatusMessage from "@/components/SidebarStatusMessage";
 import TemplateItemList from "@/components/TemplateItemList";
 import {
@@ -12,9 +12,10 @@ import {
   SIDEBAR_OPTION_BUTTON_CLASS,
 } from "@/components/sidebarStyles";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
+import type { IkeaCategory } from "@/lib/api/ikea";
 import { getTemplates, type TemplateItemSummary, type TemplateSummary } from "@/lib/api/templates";
 
-type SidebarMode = "choice" | "templates" | "ebay";
+type SidebarMode = "choice" | "templates" | "ikea";
 
 interface AestheticSidebarProps {
   onItemSelect: (item: TemplateItemSummary) => void;
@@ -23,9 +24,10 @@ interface AestheticSidebarProps {
 export default function AestheticSidebar({ onItemSelect }: AestheticSidebarProps) {
   const [mode, setMode] = useState<SidebarMode>("choice");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummary | null>(null);
+  const [selectedIkeaCategory, setSelectedIkeaCategory] = useState<IkeaCategory | null>(null);
 
   const showBackButton = mode !== "choice";
-  const title = getSidebarTitle(mode, selectedTemplate);
+  const title = getSidebarTitle(mode, selectedTemplate, selectedIkeaCategory);
 
   return (
     <aside className="fixed inset-y-0 right-0 z-10 flex w-80 flex-col border-l border-night-line bg-night">
@@ -37,9 +39,13 @@ export default function AestheticSidebar({ onItemSelect }: AestheticSidebarProps
                 setSelectedTemplate(null);
                 return;
               }
+              if (selectedIkeaCategory) {
+                setSelectedIkeaCategory(null);
+                return;
+              }
               setMode("choice");
             }}
-            ariaLabel={selectedTemplate ? "Back to aesthetics" : "Back to options"}
+            ariaLabel={getBackAriaLabel(selectedTemplate, selectedIkeaCategory)}
           />
         )}
         <h2 className="font-serif text-2xl text-ivory">{title}</h2>
@@ -48,10 +54,16 @@ export default function AestheticSidebar({ onItemSelect }: AestheticSidebarProps
         {mode === "choice" ? (
           <SourceChoicePanel
             onUseTemplates={() => setMode("templates")}
-            onShopEbay={() => setMode("ebay")}
+            onShopIkea={() => {
+              setSelectedIkeaCategory(null);
+              setMode("ikea");
+            }}
           />
-        ) : mode === "ebay" ? (
-          <EbaySearchPanel />
+        ) : mode === "ikea" ? (
+          <IkeaBrowsePanel
+            selectedCategory={selectedIkeaCategory}
+            onSelectCategory={setSelectedIkeaCategory}
+          />
         ) : selectedTemplate ? (
           <TemplateItemList
             key={selectedTemplate.id}
@@ -66,28 +78,51 @@ export default function AestheticSidebar({ onItemSelect }: AestheticSidebarProps
   );
 }
 
-function getSidebarTitle(mode: SidebarMode, selectedTemplate: TemplateSummary | null): string {
+function getSidebarTitle(
+  mode: SidebarMode,
+  selectedTemplate: TemplateSummary | null,
+  selectedIkeaCategory: IkeaCategory | null,
+): string {
   if (selectedTemplate) {
     return selectedTemplate.label;
+  }
+
+  if (selectedIkeaCategory) {
+    return selectedIkeaCategory.name;
   }
 
   if (mode === "templates") {
     return "Pick your aesthetic";
   }
 
-  if (mode === "ebay") {
-    return "Shop eBay";
+  if (mode === "ikea") {
+    return "Shop IKEA";
   }
 
   return "Room ready";
 }
 
+function getBackAriaLabel(
+  selectedTemplate: TemplateSummary | null,
+  selectedIkeaCategory: IkeaCategory | null,
+): string {
+  if (selectedTemplate) {
+    return "Back to aesthetics";
+  }
+
+  if (selectedIkeaCategory) {
+    return "Back to IKEA categories";
+  }
+
+  return "Back to options";
+}
+
 function SourceChoicePanel({
   onUseTemplates,
-  onShopEbay,
+  onShopIkea,
 }: {
   onUseTemplates: () => void;
-  onShopEbay: () => void;
+  onShopIkea: () => void;
 }) {
   return (
     <div className="flex flex-col gap-6">
@@ -96,8 +131,8 @@ function SourceChoicePanel({
         <button type="button" onClick={onUseTemplates} className={SIDEBAR_OPTION_BUTTON_CLASS}>
           Use templates
         </button>
-        <button type="button" onClick={onShopEbay} className={SIDEBAR_OPTION_BUTTON_CLASS}>
-          Shop directly from eBay
+        <button type="button" onClick={onShopIkea} className={SIDEBAR_OPTION_BUTTON_CLASS}>
+          Shop directly from IKEA
         </button>
       </div>
     </div>

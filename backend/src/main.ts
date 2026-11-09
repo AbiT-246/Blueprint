@@ -17,7 +17,9 @@ async function bootstrap() {
     credentials: true,
   });
   app.useBodyParser('json', { limit: JSON_BODY_LIMIT });
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, transform: true }),
+  );
 
   const port = Number(process.env.PORT) || DEFAULT_PORT;
   await app.listen(port, '0.0.0.0');
