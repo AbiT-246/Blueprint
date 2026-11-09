@@ -85,10 +85,6 @@ export default function AestheticSearchPanel({
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-sm leading-relaxed text-mist">
-        Search IKEA for pieces that fit the {aestheticLabel} aesthetic.
-      </p>
-
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
           type="search"
@@ -116,11 +112,16 @@ export default function AestheticSearchPanel({
       )}
 
       {searchState.status === "ready" && (
-        <IkeaProductResults
-          products={searchState.products}
-          onProductSelect={onProductSelect}
-          emptyMessage={`No products found for "${searchState.searchPhrase}".`}
-        />
+        <>
+          <IkeaProductResults
+            products={searchState.products}
+            onProductSelect={onProductSelect}
+            emptyMessage={`No products found for "${searchState.searchPhrase}".`}
+          />
+          {searchState.products.length > 0 && (
+            <p className="text-center text-xs text-mist/70">More pieces to make it yours ↓</p>
+          )}
+        </>
       )}
     </div>
   );

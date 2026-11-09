@@ -9,7 +9,7 @@ export default function LandingHeader({ onGetStarted }: LandingHeaderProps) {
     <header className="flex items-center justify-between">
       <div className="flex items-center gap-2 text-grape-light">
         <FlowerIcon className="h-7 w-7" />
-        <span className="font-serif text-3xl text-ivory">blueprint</span>
+        <span className="font-serif text-3xl text-ivory">Blueprint</span>
       </div>
 
       <nav className="flex items-center gap-6">

@@ -1,15 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AestheticSearchPanel from "@/components/AestheticSearchPanel";
 import IkeaBrowsePanel from "@/components/IkeaBrowsePanel";
 import SidebarStatusMessage from "@/components/SidebarStatusMessage";
 import {
+  SIDEBAR_BACK_PILL_CLASS,
   SIDEBAR_CARD_CLASS,
-  SIDEBAR_CARD_LABEL_CLASS,
+  SIDEBAR_CIRCLE_ACTION_CLASS,
   SIDEBAR_IMAGE_SIZES,
-  SIDEBAR_OPTION_BUTTON_CLASS,
+  SIDEBAR_PANEL_CLASS,
 } from "@/components/sidebarStyles";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
 import type { IkeaCategory, IkeaProduct } from "@/lib/api/ikea";
@@ -17,23 +18,42 @@ import { getTemplates, type TemplateSummary } from "@/lib/api/templates";
 
 type SidebarMode = "choice" | "templates" | "ikea";
 
-interface AestheticSidebarProps {
-  onIkeaProductSelect: (product: IkeaProduct) => void;
+export type StudioChromeView = "ready" | "aesthetics" | "aesthetic-search" | "ikea" | "ikea-category";
+
+export interface StudioChromeState {
+  view: StudioChromeView;
+  aestheticLabel?: string;
 }
 
-export default function AestheticSidebar({ onIkeaProductSelect }: AestheticSidebarProps) {
+interface AestheticSidebarProps {
+  onIkeaProductSelect: (product: IkeaProduct) => void;
+  onChromeChange?: (state: StudioChromeState) => void;
+}
+
+const TEMPLATES_PREVIEW_IMAGE = "/Aesthetics/Indie.webp";
+
+export default function AestheticSidebar({
+  onIkeaProductSelect,
+  onChromeChange,
+}: AestheticSidebarProps) {
   const [mode, setMode] = useState<SidebarMode>("choice");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummary | null>(null);
   const [selectedIkeaCategory, setSelectedIkeaCategory] = useState<IkeaCategory | null>(null);
 
+  useEffect(() => {
+    onChromeChange?.(getChromeState(mode, selectedTemplate, selectedIkeaCategory));
+  }, [mode, selectedTemplate, selectedIkeaCategory, onChromeChange]);
+
   const showBackButton = mode !== "choice";
   const title = getSidebarTitle(mode, selectedTemplate, selectedIkeaCategory);
+  const subtitle = getSidebarSubtitle(mode, selectedTemplate, selectedIkeaCategory);
 
   return (
-    <aside className="fixed inset-y-0 right-0 z-10 flex w-80 flex-col border-l border-night-line bg-night">
-      <header className="flex items-center gap-2 border-b border-night-line px-6 py-5">
+    <aside className={SIDEBAR_PANEL_CLASS}>
+      <div className="flex flex-1 flex-col overflow-y-auto px-5 py-5">
         {showBackButton && (
-          <BackButton
+          <button
+            type="button"
             onClick={() => {
               if (selectedTemplate) {
                 setSelectedTemplate(null);
@@ -45,12 +65,13 @@ export default function AestheticSidebar({ onIkeaProductSelect }: AestheticSideb
               }
               setMode("choice");
             }}
-            ariaLabel={getBackAriaLabel(selectedTemplate, selectedIkeaCategory)}
-          />
+            className={`${SIDEBAR_BACK_PILL_CLASS} mb-5`}
+          >
+            <span aria-hidden="true">←</span>
+            {getBackLabel(selectedTemplate, selectedIkeaCategory)}
+          </button>
         )}
-        <h2 className="font-serif text-2xl text-ivory">{title}</h2>
-      </header>
-      <div className="flex-1 overflow-y-auto px-6 py-5">
+
         {mode === "choice" ? (
           <SourceChoicePanel
             onUseTemplates={() => setMode("templates")}
@@ -59,24 +80,57 @@ export default function AestheticSidebar({ onIkeaProductSelect }: AestheticSideb
               setMode("ikea");
             }}
           />
-        ) : mode === "ikea" ? (
-          <IkeaBrowsePanel
-            selectedCategory={selectedIkeaCategory}
-            onSelectCategory={setSelectedIkeaCategory}
-            onProductSelect={onIkeaProductSelect}
-          />
-        ) : selectedTemplate ? (
-          <AestheticSearchPanel
-            key={selectedTemplate.id}
-            aestheticLabel={selectedTemplate.label}
-            onProductSelect={onIkeaProductSelect}
-          />
         ) : (
-          <TemplateList onSelect={setSelectedTemplate} />
+          <>
+            <header className="mb-5 flex flex-col gap-2">
+              <h2 className="font-serif text-[1.75rem] leading-tight text-ivory">{title}</h2>
+              {subtitle && <p className="text-sm leading-relaxed text-mist">{subtitle}</p>}
+            </header>
+
+            {mode === "ikea" ? (
+              <IkeaBrowsePanel
+                selectedCategory={selectedIkeaCategory}
+                onSelectCategory={setSelectedIkeaCategory}
+                onProductSelect={onIkeaProductSelect}
+              />
+            ) : selectedTemplate ? (
+              <AestheticSearchPanel
+                key={selectedTemplate.id}
+                aestheticLabel={selectedTemplate.label}
+                onProductSelect={onIkeaProductSelect}
+              />
+            ) : (
+              <TemplateList onSelect={setSelectedTemplate} />
+            )}
+          </>
         )}
       </div>
     </aside>
   );
+}
+
+function getChromeState(
+  mode: SidebarMode,
+  selectedTemplate: TemplateSummary | null,
+  selectedIkeaCategory: IkeaCategory | null,
+): StudioChromeState {
+  if (selectedTemplate) {
+    return { view: "aesthetic-search", aestheticLabel: selectedTemplate.label };
+  }
+
+  if (selectedIkeaCategory) {
+    return { view: "ikea-category" };
+  }
+
+  if (mode === "templates") {
+    return { view: "aesthetics" };
+  }
+
+  if (mode === "ikea") {
+    return { view: "ikea" };
+  }
+
+  return { view: "ready" };
 }
 
 function getSidebarTitle(
@@ -103,19 +157,43 @@ function getSidebarTitle(
   return "Room ready";
 }
 
-function getBackAriaLabel(
+function getSidebarSubtitle(
+  mode: SidebarMode,
+  selectedTemplate: TemplateSummary | null,
+  selectedIkeaCategory: IkeaCategory | null,
+): string | null {
+  if (selectedTemplate) {
+    return `Search IKEA for pieces that fit the ${selectedTemplate.label} aesthetic.`;
+  }
+
+  if (selectedIkeaCategory) {
+    return "Browse pieces and add them to your room.";
+  }
+
+  if (mode === "templates") {
+    return "Find a look that feels like you. Choose a style to explore in your room.";
+  }
+
+  if (mode === "ikea") {
+    return "Browse IKEA categories for furniture and decor that fits your room.";
+  }
+
+  return null;
+}
+
+function getBackLabel(
   selectedTemplate: TemplateSummary | null,
   selectedIkeaCategory: IkeaCategory | null,
 ): string {
   if (selectedTemplate) {
-    return "Back to aesthetics";
+    return "Your aesthetics";
   }
 
   if (selectedIkeaCategory) {
-    return "Back to IKEA categories";
+    return "Shop IKEA";
   }
 
-  return "Back to options";
+  return "Room ready";
 }
 
 function SourceChoicePanel({
@@ -126,36 +204,70 @@ function SourceChoicePanel({
   onShopIkea: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-6">
-      <p className="text-sm leading-relaxed text-mist">Your room has been scanned!</p>
+    <div className="flex min-h-full flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <button type="button" onClick={onUseTemplates} className={SIDEBAR_OPTION_BUTTON_CLASS}>
-          Shop by Theme
-        </button>
-        <button type="button" onClick={onShopIkea} className={SIDEBAR_OPTION_BUTTON_CLASS}>
-          Shop by Product
-        </button>
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-grape/30 px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.14em] text-lilac uppercase">
+          <span aria-hidden="true">✓</span>
+          Scan complete
+        </span>
+        <h2 className="font-serif text-[2rem] leading-none text-ivory">Room ready</h2>
+        <p className="text-sm leading-relaxed text-mist">Your room has been scanned!</p>
       </div>
-    </div>
-  );
-}
 
-function BackButton({ onClick, ariaLabel }: { onClick: () => void; ariaLabel: string }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={ariaLabel}
-      className="-ml-2 rounded-md p-1 text-mist transition-colors hover:bg-night-raised hover:text-ivory"
-    >
-      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="size-5">
-        <path
-          fillRule="evenodd"
-          d="M12.79 5.23a.75.75 0 0 1-.02 1.06L8.832 10l3.938 3.71a.75.75 0 1 1-1.04 1.08l-4.5-4.25a.75.75 0 0 1 0-1.08l4.5-4.25a.75.75 0 0 1 1.06.02Z"
-          clipRule="evenodd"
-        />
-      </svg>
-    </button>
+      <section className="flex flex-col gap-3">
+        <h3 className="text-[0.65rem] font-semibold tracking-[0.18em] text-mist uppercase">
+          Make it yours
+        </h3>
+
+        <button
+          type="button"
+          onClick={onUseTemplates}
+          className="group flex w-full items-center gap-3 rounded-2xl border border-night-line/60 bg-[#24182c] p-3 text-left transition-colors hover:border-mist/50"
+        >
+          <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl bg-night-sunken">
+            <Image
+              src={TEMPLATES_PREVIEW_IMAGE}
+              alt=""
+              fill
+              sizes="5rem"
+              className="object-cover"
+            />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-ivory">Use templates</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-mist">
+              Find a look you love, then make it yours.
+            </p>
+          </div>
+          <span className={SIDEBAR_CIRCLE_ACTION_CLASS} aria-hidden="true">
+            →
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onShopIkea}
+          className="group flex w-full items-start justify-between gap-3 rounded-2xl border border-night-line/80 bg-transparent px-4 py-3.5 text-left transition-colors hover:border-mist/50"
+        >
+          <div>
+            <p className="text-sm font-semibold text-ivory">Shop directly from IKEA</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-mist">
+              Start with the pieces you love.
+            </p>
+          </div>
+          <span className="mt-0.5 text-sm text-mist transition-colors group-hover:text-ivory" aria-hidden="true">
+            ↗
+          </span>
+        </button>
+      </section>
+
+      <section className="mt-auto flex flex-col gap-2 border-t border-night-line/60 pt-5">
+        <p className="text-xs leading-relaxed text-mist">
+          Drag to move · Ring or R to rotate · +/− to resize · Delete to remove
+        </p>
+        <p className="text-xs text-mist/70">Add a piece to start arranging.</p>
+      </section>
+    </div>
   );
 }
 
@@ -175,13 +287,16 @@ function TemplateList({ onSelect }: TemplateListProps) {
   }
 
   return (
-    <ul className="flex flex-col gap-4">
-      {resource.data.map((template) => (
-        <li key={template.id}>
-          <TemplateCard template={template} onSelect={onSelect} />
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-col gap-4">
+      <ul className="flex flex-col gap-3">
+        {resource.data.map((template) => (
+          <li key={template.id}>
+            <TemplateCard template={template} onSelect={onSelect} />
+          </li>
+        ))}
+      </ul>
+      <p className="pt-1 text-center text-xs text-mist/70">A starting point, not a rulebook.</p>
+    </div>
   );
 }
 
@@ -192,9 +307,13 @@ interface TemplateCardProps {
 
 function TemplateCard({ template, onSelect }: TemplateCardProps) {
   return (
-    <button type="button" onClick={() => onSelect(template)} className={SIDEBAR_CARD_CLASS}>
+    <button
+      type="button"
+      onClick={() => onSelect(template)}
+      className={`${SIDEBAR_CARD_CLASS} group flex-row items-center gap-3 p-2.5`}
+    >
       {template.previewImageUrl && (
-        <div className="relative aspect-video w-full bg-night-raised">
+        <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl bg-night-raised">
           <Image
             src={template.previewImageUrl}
             alt={`${template.label} room`}
@@ -204,7 +323,17 @@ function TemplateCard({ template, onSelect }: TemplateCardProps) {
           />
         </div>
       )}
-      <span className={SIDEBAR_CARD_LABEL_CLASS}>{template.label}</span>
+      <div className="min-w-0 flex-1 py-1">
+        <span className="block font-serif text-lg leading-tight text-ivory">{template.label}</span>
+        {template.description && (
+          <span className="mt-1 line-clamp-2 block text-xs leading-relaxed text-mist">
+            {template.description}
+          </span>
+        )}
+      </div>
+      <span className={SIDEBAR_CIRCLE_ACTION_CLASS} aria-hidden="true">
+        →
+      </span>
     </button>
   );
 }

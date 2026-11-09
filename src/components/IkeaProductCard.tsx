@@ -2,6 +2,7 @@ import {
   SIDEBAR_CARD_CLASS,
   SIDEBAR_ITEM_ACTION_BUTTON_CLASS,
   SIDEBAR_ITEM_ACTION_BUTTON_DISABLED_CLASS,
+  SIDEBAR_ITEM_ACTION_BUTTON_PRIMARY_CLASS,
 } from "@/components/sidebarStyles";
 import type { IkeaProduct } from "@/lib/api/ikea";
 
@@ -15,13 +16,13 @@ export default function IkeaProductCard({ product, onSelect }: IkeaProductCardPr
   const canGenerate = Boolean(product.mainImageUrl);
 
   return (
-    <article className={SIDEBAR_CARD_CLASS}>
+    <article className={`${SIDEBAR_CARD_CLASS} bg-night-sunken/40`}>
       <button
         type="button"
         onClick={() => onSelect(product)}
         disabled={!canGenerate}
         aria-label={`Generate 3D model for ${product.name}`}
-        className="relative aspect-square w-full bg-night-raised transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+        className="relative aspect-square w-full bg-ivory/95 transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
       >
         {product.mainImageUrl ? (
           // IKEA product images are hosted on ikea.com; native img avoids Next remote config.
@@ -40,7 +41,7 @@ export default function IkeaProductCard({ product, onSelect }: IkeaProductCardPr
 
       <div className="flex flex-col gap-3 px-4 py-3">
         <div className="flex flex-col gap-1">
-          <h3 className="font-medium text-ivory">{product.name}</h3>
+          <h3 className="font-medium tracking-wide text-ivory uppercase">{product.name}</h3>
           {product.typeName && <p className="text-sm text-mist">{product.typeName}</p>}
           {priceLabel && <p className="text-sm text-mist">{priceLabel}</p>}
         </div>
@@ -52,11 +53,11 @@ export default function IkeaProductCard({ product, onSelect }: IkeaProductCardPr
             disabled={!canGenerate}
             className={
               canGenerate
-                ? SIDEBAR_ITEM_ACTION_BUTTON_CLASS
+                ? SIDEBAR_ITEM_ACTION_BUTTON_PRIMARY_CLASS
                 : SIDEBAR_ITEM_ACTION_BUTTON_DISABLED_CLASS
             }
           >
-            Add to room
+            + Add to room
           </button>
           {product.pipUrl ? (
             <a
@@ -65,10 +66,10 @@ export default function IkeaProductCard({ product, onSelect }: IkeaProductCardPr
               rel="noopener noreferrer"
               className={SIDEBAR_ITEM_ACTION_BUTTON_CLASS}
             >
-              Shop now
+              Shop now ↗
             </a>
           ) : (
-            <span className={SIDEBAR_ITEM_ACTION_BUTTON_DISABLED_CLASS}>Shop now</span>
+            <span className={SIDEBAR_ITEM_ACTION_BUTTON_DISABLED_CLASS}>Shop now ↗</span>
           )}
         </div>
       </div>
