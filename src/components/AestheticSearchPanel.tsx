@@ -1,0 +1,131 @@
+"use client";
+
+import { useEffect, useState, type FormEvent } from "react";
+import IkeaProductResults from "@/components/IkeaProductResults";
+import SidebarStatusMessage from "@/components/SidebarStatusMessage";
+import {
+  SIDEBAR_SEARCH_INPUT_CLASS,
+  SIDEBAR_SEARCH_SUBMIT_CLASS,
+} from "@/components/sidebarStyles";
+import { searchIkeaProducts, type IkeaProduct } from "@/lib/api/ikea";
+
+const SEARCH_PAGE_SIZE = 24;
+const DEFAULT_SEARCH_KEYWORD = "decor";
+
+interface AestheticSearchPanelProps {
+  aestheticLabel: string;
+  onProductSelect: (product: IkeaProduct) => void;
+}
+
+type SearchState =
+  | { status: "loading" }
+  | { status: "error" }
+  | { status: "ready"; products: IkeaProduct[]; searchPhrase: string };
+
+export default function AestheticSearchPanel({
+  aestheticLabel,
+  onProductSelect,
+}: AestheticSearchPanelProps) {
+  const [keyword, setKeyword] = useState("");
+  const [searchState, setSearchState] = useState<SearchState>({ status: "loading" });
+
+  useEffect(() => {
+    let isActive = true;
+
+    setSearchState({ status: "loading" });
+
+    searchIkeaProducts(
+      buildAestheticSearchQuery(aestheticLabel, DEFAULT_SEARCH_KEYWORD),
+      SEARCH_PAGE_SIZE,
+    )
+      .then((response) => {
+        if (!isActive) {
+          return;
+        }
+
+        setSearchState({
+          status: "ready",
+          products: response.products,
+          searchPhrase: response.searchPhrase,
+        });
+      })
+      .catch(() => {
+        if (isActive) {
+          setSearchState({ status: "error" });
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [aestheticLabel]);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const trimmedKeyword = keyword.trim();
+    if (!trimmedKeyword) {
+      return;
+    }
+
+    const query = buildAestheticSearchQuery(aestheticLabel, trimmedKeyword);
+    setSearchState({ status: "loading" });
+
+    try {
+      const response = await searchIkeaProducts(query, SEARCH_PAGE_SIZE);
+      setSearchState({
+        status: "ready",
+        products: response.products,
+        searchPhrase: response.searchPhrase,
+      });
+    } catch {
+      setSearchState({ status: "error" });
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-5">
+      <p className="text-sm leading-relaxed text-mist">
+        Search IKEA for pieces that fit the {aestheticLabel} aesthetic.
+      </p>
+
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          type="search"
+          value={keyword}
+          onChange={(event) => setKeyword(event.target.value)}
+          placeholder="e.g. decor, lamp, rug"
+          aria-label={`Search IKEA for ${aestheticLabel} items`}
+          className={SIDEBAR_SEARCH_INPUT_CLASS}
+        />
+        <button
+          type="submit"
+          disabled={!keyword.trim() || searchState.status === "loading"}
+          className={SIDEBAR_SEARCH_SUBMIT_CLASS}
+        >
+          {searchState.status === "loading" ? "Searching..." : "Search"}
+        </button>
+      </form>
+
+      {searchState.status === "loading" && (
+        <SidebarStatusMessage message="Searching IKEA products..." />
+      )}
+
+      {searchState.status === "error" && (
+        <SidebarStatusMessage message="Unable to search IKEA products. Please try again." isError />
+      )}
+
+      {searchState.status === "ready" && (
+        <IkeaProductResults
+          products={searchState.products}
+          onProductSelect={onProductSelect}
+          emptyMessage={`No products found for "${searchState.searchPhrase}".`}
+        />
+      )}
+    </div>
+  );
+}
+
+function buildAestheticSearchQuery(aestheticLabel: string, keyword: string): string {
+  return `${aestheticLabel.trim().toLowerCase()} ${keyword.trim()}`;
+}

@@ -17,12 +17,16 @@ import {
   IKEA_PRODUCT_LIST_PATH,
   IKEA_REQUEST_TIMEOUT_MS,
   IKEA_SEARCH_BASE_URL,
+  IKEA_SEARCH_RESULT_PATH,
   IKEA_WEB_BASE_URL,
 } from './constants/ikea.constants';
 import { IkeaCategory } from './interfaces/ikea-category.interface';
 import {
+  IkeaKeywordSearchResponse,
   IkeaMoreProductsResponse,
+  IkeaProduct,
   IkeaProductsByCategoryResponse,
+  IkeaSearchResultPageResponse,
 } from './interfaces/ikea-product.interface';
 
 @Injectable()
@@ -80,6 +84,28 @@ export class IkeaService {
     return this.fetchJson(url);
   }
 
+  async searchProductsByKeyword(
+    keyword: string,
+    size: number = IKEA_DEFAULT_PRODUCT_PAGE_SIZE,
+  ): Promise<IkeaKeywordSearchResponse> {
+    const url = new URL(`${this.getSearchBaseUrl()}${IKEA_SEARCH_RESULT_PATH}`);
+    url.searchParams.set('q', keyword);
+    url.searchParams.set('size', String(size));
+
+    const response = await this.fetchJson<IkeaSearchResultPageResponse>(
+      url.toString(),
+    );
+    const searchResultPage = response.searchResultPage;
+    const main = searchResultPage?.products?.main;
+    const products = this.mapSearchItemsToProducts(main?.items ?? []);
+
+    return {
+      searchPhrase: searchResultPage?.searchPhrase ?? keyword,
+      productCount: searchResultPage?.products?.badge ?? products.length,
+      products,
+    };
+  }
+
   private get country(): string {
     return (
       this.configService.get<string>('IKEA_COUNTRY') ?? IKEA_DEFAULT_COUNTRY
@@ -134,5 +160,19 @@ export class IkeaService {
         'Unable to reach the IKEA API endpoint.',
       );
     }
+  }
+
+  private mapSearchItemsToProducts(
+    items: Array<{ product?: IkeaProduct }>,
+  ): IkeaProduct[] {
+    const products: IkeaProduct[] = [];
+
+    for (const item of items) {
+      if (item.product?.id && item.product.name) {
+        products.push(item.product);
+      }
+    }
+
+    return products;
   }
 }

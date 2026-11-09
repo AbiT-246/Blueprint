@@ -13,5 +13,6 @@ export const IKEA_CATEGORIES_PATH =
   '/meta-data/navigation/catalog-products-slim.json';
 export const IKEA_PRODUCT_LIST_PATH = '/product-list-page';
 export const IKEA_MORE_PRODUCTS_PATH = '/product-list-page/more-products';
+export const IKEA_SEARCH_RESULT_PATH = '/search-result-page';
 
 export const IKEA_PRODUCT_ID_PATTERN = /^s?[0-9]{8}$/;

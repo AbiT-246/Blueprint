@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import IkeaProductCard from "@/components/IkeaProductCard";
+import IkeaProductResults from "@/components/IkeaProductResults";
 import SidebarStatusMessage from "@/components/SidebarStatusMessage";
 import { SIDEBAR_OPTION_BUTTON_CLASS, SIDEBAR_SEARCH_SUBMIT_CLASS } from "@/components/sidebarStyles";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
@@ -124,19 +124,13 @@ function IkeaProductList({
     }
   }
 
-  if (products.length === 0) {
-    return <SidebarStatusMessage message="No products found in this category." />;
-  }
-
   return (
     <div className="flex flex-col gap-4">
-      <ul className="flex flex-col gap-4">
-        {products.map((product) => (
-          <li key={product.id}>
-            <IkeaProductCard product={product} onSelect={onProductSelect} />
-          </li>
-        ))}
-      </ul>
+      <IkeaProductResults
+        products={products}
+        onProductSelect={onProductSelect}
+        emptyMessage="No products found in this category."
+      />
 
       {loadMoreError && <SidebarStatusMessage message={loadMoreError} isError />}
 

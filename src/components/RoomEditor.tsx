@@ -12,7 +12,6 @@ import {
   getMeshyGlbProxyUrl,
   waitForMeshyTask,
 } from "@/lib/api/meshy";
-import type { TemplateItemSummary } from "@/lib/api/templates";
 import { createPlaceableItemFromIkeaProduct } from "@/lib/ikea/generatedItem";
 import { type CameraSettings, DEFAULT_CAMERA_SETTINGS } from "@/lib/room-canvas/cameraSettings";
 import type { ItemSelection } from "@/lib/room-canvas/PlacedItem";
@@ -48,13 +47,6 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
       ?.addItem(item)
       .catch(() => setPlacementError(`Unable to place ${item.title}. Please try again.`));
   }, []);
-
-  const handleTemplateItemSelect = useCallback(
-    (item: TemplateItemSummary) => {
-      placeItem(item);
-    },
-    [placeItem],
-  );
 
   const handleIkeaProductSelect = useCallback(
     async (product: IkeaProduct) => {
@@ -160,10 +152,7 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
           </p>
         )}
       </div>
-      <AestheticSidebar
-        onItemSelect={handleTemplateItemSelect}
-        onIkeaProductSelect={handleIkeaProductSelect}
-      />
+      <AestheticSidebar onIkeaProductSelect={handleIkeaProductSelect} />
 
       {isGenerating && <ProcessingOverlay message="Processing" progress={generationProgress} />}
     </div>
