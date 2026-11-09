@@ -54,24 +54,19 @@ function IkeaCategoryList({ onSelect }: { onSelect: (category: IkeaCategory) => 
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <p className="text-sm leading-relaxed text-mist">
-        Browse IKEA categories for furniture and decor that fits your room.
-      </p>
-      <ul className="flex flex-col gap-3">
-        {categoriesResource.data.map((category) => (
-          <li key={category.id}>
-            <button
-              type="button"
-              onClick={() => onSelect(category)}
-              className={SIDEBAR_OPTION_BUTTON_CLASS}
-            >
-              {category.name}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul className="flex flex-col gap-3">
+      {categoriesResource.data.map((category) => (
+        <li key={category.id}>
+          <button
+            type="button"
+            onClick={() => onSelect(category)}
+            className={SIDEBAR_OPTION_BUTTON_CLASS}
+          >
+            {category.name}
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }
 
