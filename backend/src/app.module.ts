@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { EbayModule } from './ebay/ebay.module';
 import { OpenAiModule } from './openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { TemplatesModule } from './templates/templates.module';
@@ -12,8 +13,10 @@ import { TemplatesModule } from './templates/templates.module';
     PrismaModule,
     OpenAiModule,
     TemplatesModule,
+    EbayModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+
