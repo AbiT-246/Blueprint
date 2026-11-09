@@ -12,16 +12,20 @@ import {
   SIDEBAR_OPTION_BUTTON_CLASS,
 } from "@/components/sidebarStyles";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
-import type { IkeaCategory } from "@/lib/api/ikea";
+import type { IkeaCategory, IkeaProduct } from "@/lib/api/ikea";
 import { getTemplates, type TemplateItemSummary, type TemplateSummary } from "@/lib/api/templates";
 
 type SidebarMode = "choice" | "templates" | "ikea";
 
 interface AestheticSidebarProps {
   onItemSelect: (item: TemplateItemSummary) => void;
+  onIkeaProductSelect: (product: IkeaProduct) => void;
 }
 
-export default function AestheticSidebar({ onItemSelect }: AestheticSidebarProps) {
+export default function AestheticSidebar({
+  onItemSelect,
+  onIkeaProductSelect,
+}: AestheticSidebarProps) {
   const [mode, setMode] = useState<SidebarMode>("choice");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummary | null>(null);
   const [selectedIkeaCategory, setSelectedIkeaCategory] = useState<IkeaCategory | null>(null);
@@ -63,6 +67,7 @@ export default function AestheticSidebar({ onItemSelect }: AestheticSidebarProps
           <IkeaBrowsePanel
             selectedCategory={selectedIkeaCategory}
             onSelectCategory={setSelectedIkeaCategory}
+            onProductSelect={onIkeaProductSelect}
           />
         ) : selectedTemplate ? (
           <TemplateItemList

@@ -1,13 +1,22 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import AestheticSidebar from "@/components/AestheticSidebar";
 import PerspectivePanel from "@/components/PerspectivePanel";
+import ProcessingOverlay from "@/components/ProcessingOverlay";
 import RoomCanvas, { type RoomCanvasHandle } from "@/components/RoomCanvas";
 import SelectedItemToolbar from "@/components/SelectedItemToolbar";
+import type { IkeaProduct } from "@/lib/api/ikea";
+import {
+  createImageTo3DFromUrl,
+  getMeshyGlbProxyUrl,
+  waitForMeshyTask,
+} from "@/lib/api/meshy";
 import type { TemplateItemSummary } from "@/lib/api/templates";
+import { createPlaceableItemFromIkeaProduct } from "@/lib/ikea/generatedItem";
 import { type CameraSettings, DEFAULT_CAMERA_SETTINGS } from "@/lib/room-canvas/cameraSettings";
 import type { ItemSelection } from "@/lib/room-canvas/PlacedItem";
+import type { PlaceableItem } from "@/lib/room-canvas/RoomScene";
 
 const OVERLAY_BUTTON_CLASS =
   "flex h-8 items-center justify-center rounded-full border border-night-line bg-night-raised/90 px-3 text-sm text-ivory backdrop-blur transition-colors hover:bg-night-raised";
@@ -19,17 +28,88 @@ interface RoomEditorProps {
 
 export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
   const canvasRef = useRef<RoomCanvasHandle>(null);
+  const generationAbortRef = useRef<AbortController | null>(null);
   const [placementError, setPlacementError] = useState<string | null>(null);
   const [cameraSettings, setCameraSettings] = useState<CameraSettings>(DEFAULT_CAMERA_SETTINGS);
   const [isPerspectiveOpen, setIsPerspectiveOpen] = useState(false);
   const [selection, setSelection] = useState<ItemSelection | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState<number | null>(null);
 
-  const placeItem = useCallback((item: TemplateItemSummary) => {
+  useEffect(() => {
+    return () => {
+      generationAbortRef.current?.abort();
+    };
+  }, []);
+
+  const placeItem = useCallback((item: PlaceableItem) => {
     setPlacementError(null);
     canvasRef.current
       ?.addItem(item)
       .catch(() => setPlacementError(`Unable to place ${item.title}. Please try again.`));
   }, []);
+
+  const handleTemplateItemSelect = useCallback(
+    (item: TemplateItemSummary) => {
+      placeItem(item);
+    },
+    [placeItem],
+  );
+
+  const handleIkeaProductSelect = useCallback(
+    async (product: IkeaProduct) => {
+      if (isGenerating) {
+        return;
+      }
+
+      const imageUrlForGeneration = product.mainImageUrl;
+      if (!imageUrlForGeneration) {
+        setPlacementError(`No image available for ${product.name}.`);
+        return;
+      }
+
+      generationAbortRef.current?.abort();
+      const abortController = new AbortController();
+      generationAbortRef.current = abortController;
+
+      setPlacementError(null);
+      setIsGenerating(true);
+      setGenerationProgress(0);
+
+      try {
+        const { result: taskId } = await createImageTo3DFromUrl(imageUrlForGeneration);
+        const task = await waitForMeshyTask(taskId, {
+          signal: abortController.signal,
+          onProgress: setGenerationProgress,
+        });
+
+        if (!task.model_urls?.glb) {
+          throw new Error("Meshy did not return a GLB model URL.");
+        }
+
+        placeItem(
+          createPlaceableItemFromIkeaProduct(product, getMeshyGlbProxyUrl(taskId)),
+        );
+      } catch (error) {
+        if (isAbortError(error)) {
+          return;
+        }
+
+        setPlacementError(
+          error instanceof Error
+            ? error.message
+            : `Unable to generate a 3D model for ${product.name}.`,
+        );
+      } finally {
+        if (generationAbortRef.current === abortController) {
+          generationAbortRef.current = null;
+          setIsGenerating(false);
+          setGenerationProgress(null);
+        }
+      }
+    },
+    [isGenerating, placeItem],
+  );
 
   return (
     <div className="fixed inset-0 z-20 bg-night font-sans">
@@ -64,6 +144,7 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
             <SelectedItemToolbar
               selection={selection}
               onScaleChange={(scale) => canvasRef.current?.setSelectedItemScale(scale)}
+              onColorChange={(color) => canvasRef.current?.setSelectedItemColor(color)}
               onRemove={() => canvasRef.current?.removeSelectedItem()}
             />
           </div>
@@ -79,7 +160,16 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
           </p>
         )}
       </div>
-      <AestheticSidebar onItemSelect={placeItem} />
+      <AestheticSidebar
+        onItemSelect={handleTemplateItemSelect}
+        onIkeaProductSelect={handleIkeaProductSelect}
+      />
+
+      {isGenerating && <ProcessingOverlay message="Processing" progress={generationProgress} />}
     </div>
   );
+}
+
+function isAbortError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === "AbortError";
 }

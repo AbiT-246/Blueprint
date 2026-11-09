@@ -114,6 +114,10 @@ export class RoomScene {
     this.interaction.scaleSelected(scale);
   }
 
+  setSelectedItemColor(color: string): void {
+    this.interaction.setSelectedColor(color);
+  }
+
   removeSelectedItem(): void {
     this.interaction.removeSelected();
   }

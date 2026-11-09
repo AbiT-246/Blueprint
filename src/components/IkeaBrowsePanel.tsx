@@ -19,14 +19,22 @@ const LOAD_MORE_PAGE_SIZE = 24;
 interface IkeaBrowsePanelProps {
   selectedCategory: IkeaCategory | null;
   onSelectCategory: (category: IkeaCategory) => void;
+  onProductSelect: (product: IkeaProduct) => void;
 }
 
 export default function IkeaBrowsePanel({
   selectedCategory,
   onSelectCategory,
+  onProductSelect,
 }: IkeaBrowsePanelProps) {
   if (selectedCategory) {
-    return <IkeaProductList key={selectedCategory.id} category={selectedCategory} />;
+    return (
+      <IkeaProductList
+        key={selectedCategory.id}
+        category={selectedCategory}
+        onProductSelect={onProductSelect}
+      />
+    );
   }
 
   return <IkeaCategoryList onSelect={onSelectCategory} />;
@@ -67,7 +75,13 @@ function IkeaCategoryList({ onSelect }: { onSelect: (category: IkeaCategory) => 
   );
 }
 
-function IkeaProductList({ category }: { category: IkeaCategory }) {
+function IkeaProductList({
+  category,
+  onProductSelect,
+}: {
+  category: IkeaCategory;
+  onProductSelect: (product: IkeaProduct) => void;
+}) {
   const loadProducts = useCallback(
     () => getIkeaProducts(category.id, INITIAL_PAGE_SIZE),
     [category.id],
@@ -119,7 +133,7 @@ function IkeaProductList({ category }: { category: IkeaCategory }) {
       <ul className="flex flex-col gap-4">
         {products.map((product) => (
           <li key={product.id}>
-            <IkeaProductCard product={product} />
+            <IkeaProductCard product={product} onSelect={onProductSelect} />
           </li>
         ))}
       </ul>

@@ -8,6 +8,7 @@ import { type PlaceableItem, RoomScene } from "@/lib/room-canvas/RoomScene";
 export interface RoomCanvasHandle {
   addItem: (item: PlaceableItem) => Promise<void>;
   setSelectedItemScale: (scale: number) => void;
+  setSelectedItemColor: (color: string) => void;
   removeSelectedItem: () => void;
 }
 
@@ -63,6 +64,7 @@ export default function RoomCanvas({
     () => ({
       addItem: (item) => sceneRef.current?.addItem(item) ?? Promise.reject(new Error("Room canvas is not ready.")),
       setSelectedItemScale: (scale) => sceneRef.current?.setSelectedItemScale(scale),
+      setSelectedItemColor: (color) => sceneRef.current?.setSelectedItemColor(color),
       removeSelectedItem: () => sceneRef.current?.removeSelectedItem(),
     }),
     [],

@@ -1,6 +1,7 @@
 import { Box3, Box3Helper, type Camera, type Object3D, Raycaster, type Scene, Vector2, Vector3 } from "three";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import { clampItemScale, ITEM_SCALE } from "./itemScale";
+import { getObjectColorHex, setObjectColor } from "./objectColor";
 import { getPlacementSize, type ItemSelection, type PlacedItem } from "./PlacedItem";
 import type { RotationAxis } from "./placement/PlacementStrategy";
 
@@ -80,6 +81,15 @@ export class ItemInteractionController {
     item.scale = clampItemScale(scale);
     item.root.scale.setScalar(item.scale);
     this.keepOnSurface(item);
+    this.notifySelection();
+    this.callbacks.onChange();
+  }
+
+  setSelectedColor(color: string): void {
+    const item = this.selected;
+    if (!item) return;
+
+    setObjectColor(item.root, color);
     this.notifySelection();
     this.callbacks.onChange();
   }
@@ -187,7 +197,15 @@ export class ItemInteractionController {
 
   private notifySelection(): void {
     const item = this.selected;
-    this.callbacks.onSelectionChange(item ? { title: item.title, scale: item.scale } : null);
+    this.callbacks.onSelectionChange(
+      item
+        ? {
+            title: item.title,
+            scale: item.scale,
+            color: getObjectColorHex(item.root),
+          }
+        : null,
+    );
   }
 
   /** True while the pointer is over (or dragging) the rotation ring, so item dragging stays out of its way. */
