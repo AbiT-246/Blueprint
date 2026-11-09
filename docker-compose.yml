@@ -35,6 +35,7 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-blueprint}:${POSTGRES_PASSWORD:-blueprint}@postgres:5432/${POSTGRES_DB:-blueprint}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      MESHY_API_KEY: ${MESHY_API_KEY}
       IKEA_COUNTRY: ${IKEA_COUNTRY:-ca}
       IKEA_LANGUAGE: ${IKEA_LANGUAGE:-en}
     depends_on:

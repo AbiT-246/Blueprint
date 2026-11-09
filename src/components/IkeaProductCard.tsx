@@ -7,14 +7,22 @@ import type { IkeaProduct } from "@/lib/api/ikea";
 
 interface IkeaProductCardProps {
   product: IkeaProduct;
+  onSelect: (product: IkeaProduct) => void;
 }
 
-export default function IkeaProductCard({ product }: IkeaProductCardProps) {
+export default function IkeaProductCard({ product, onSelect }: IkeaProductCardProps) {
   const priceLabel = formatPrice(product.salesPrice);
+  const canGenerate = Boolean(product.mainImageUrl);
 
   return (
     <article className={SIDEBAR_CARD_CLASS}>
-      <div className="relative aspect-square w-full bg-night-raised">
+      <button
+        type="button"
+        onClick={() => onSelect(product)}
+        disabled={!canGenerate}
+        aria-label={`Generate 3D model for ${product.name}`}
+        className="relative aspect-square w-full bg-night-raised transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+      >
         {product.mainImageUrl ? (
           // IKEA product images are hosted on ikea.com; native img avoids Next remote config.
           // eslint-disable-next-line @next/next/no-img-element
@@ -28,7 +36,7 @@ export default function IkeaProductCard({ product }: IkeaProductCardProps) {
             No image available
           </div>
         )}
-      </div>
+      </button>
 
       <div className="flex flex-col gap-3 px-4 py-3">
         <div className="flex flex-col gap-1">
@@ -38,7 +46,16 @@ export default function IkeaProductCard({ product }: IkeaProductCardProps) {
         </div>
 
         <div className="flex gap-2">
-          <button type="button" disabled className={SIDEBAR_ITEM_ACTION_BUTTON_DISABLED_CLASS}>
+          <button
+            type="button"
+            onClick={() => onSelect(product)}
+            disabled={!canGenerate}
+            className={
+              canGenerate
+                ? SIDEBAR_ITEM_ACTION_BUTTON_CLASS
+                : SIDEBAR_ITEM_ACTION_BUTTON_DISABLED_CLASS
+            }
+          >
             Add to room
           </button>
           {product.pipUrl ? (
