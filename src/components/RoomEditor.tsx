@@ -144,6 +144,7 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
             <SelectedItemToolbar
               selection={selection}
               onScaleChange={(scale) => canvasRef.current?.setSelectedItemScale(scale)}
+              onColorChange={(color) => canvasRef.current?.setSelectedItemColor(color)}
               onRemove={() => canvasRef.current?.removeSelectedItem()}
             />
           </div>

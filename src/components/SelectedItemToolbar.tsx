@@ -9,10 +9,16 @@ const PERCENT = 100;
 interface SelectedItemToolbarProps {
   selection: ItemSelection;
   onScaleChange: (scale: number) => void;
+  onColorChange: (color: string) => void;
   onRemove: () => void;
 }
 
-export default function SelectedItemToolbar({ selection, onScaleChange, onRemove }: SelectedItemToolbarProps) {
+export default function SelectedItemToolbar({
+  selection,
+  onScaleChange,
+  onColorChange,
+  onRemove,
+}: SelectedItemToolbarProps) {
   return (
     <div className={`${OVERLAY_PANEL_CLASS} w-56`}>
       <p className="truncate font-serif text-base">{selection.title}</p>
@@ -29,6 +35,16 @@ export default function SelectedItemToolbar({ selection, onScaleChange, onRemove
           value={selection.scale}
           onChange={(event) => onScaleChange(Number(event.target.value))}
           className={OVERLAY_SLIDER_CLASS}
+        />
+      </label>
+      <label className="flex items-center justify-between gap-3 text-mist">
+        Color
+        <input
+          type="color"
+          value={selection.color}
+          onChange={(event) => onColorChange(event.target.value)}
+          aria-label={`Color for ${selection.title}`}
+          className="h-8 w-12 cursor-pointer rounded border border-night-line bg-transparent p-0.5"
         />
       </label>
       <button

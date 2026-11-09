@@ -15,6 +15,7 @@ export interface PlacedItem {
 export interface ItemSelection {
   title: string;
   scale: number;
+  color: string;
 }
 
 /** Size of the axis-aligned box around the item at its current scale and rotation. */
