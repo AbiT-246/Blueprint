@@ -13,12 +13,23 @@ import {
   SIDEBAR_PANEL_CLASS,
 } from "@/components/sidebarStyles";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
-import type { IkeaCategory, IkeaProduct } from "@/lib/api/ikea";
+import {
+  STORE_LABELS,
+  type ShoppingStore,
+  type StoreCategory,
+  type StoreProduct,
+} from "@/lib/api/catalog";
 import { getTemplates, type TemplateSummary } from "@/lib/api/templates";
 
-type SidebarMode = "choice" | "templates" | "ikea";
+type SidebarMode = "choice" | "store" | "themes" | "categories";
 
-export type StudioChromeView = "ready" | "aesthetics" | "aesthetic-search" | "ikea" | "ikea-category";
+export type StudioChromeView =
+  | "ready"
+  | "store"
+  | "aesthetics"
+  | "aesthetic-search"
+  | "categories"
+  | "category";
 
 export interface StudioChromeState {
   view: StudioChromeView;
@@ -26,27 +37,26 @@ export interface StudioChromeState {
 }
 
 interface AestheticSidebarProps {
-  onIkeaProductSelect: (product: IkeaProduct) => void;
+  onProductSelect: (product: StoreProduct) => void;
   onChromeChange?: (state: StudioChromeState) => void;
 }
 
-const TEMPLATES_PREVIEW_IMAGE = "/Aesthetics/Indie.webp";
-
 export default function AestheticSidebar({
-  onIkeaProductSelect,
+  onProductSelect,
   onChromeChange,
 }: AestheticSidebarProps) {
   const [mode, setMode] = useState<SidebarMode>("choice");
+  const [store, setStore] = useState<ShoppingStore | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummary | null>(null);
-  const [selectedIkeaCategory, setSelectedIkeaCategory] = useState<IkeaCategory | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<StoreCategory | null>(null);
 
   useEffect(() => {
-    onChromeChange?.(getChromeState(mode, selectedTemplate, selectedIkeaCategory));
-  }, [mode, selectedTemplate, selectedIkeaCategory, onChromeChange]);
+    onChromeChange?.(getChromeState(mode, selectedTemplate, selectedCategory));
+  }, [mode, selectedTemplate, selectedCategory, onChromeChange]);
 
   const showBackButton = mode !== "choice";
-  const title = getSidebarTitle(mode, selectedTemplate, selectedIkeaCategory);
-  const subtitle = getSidebarSubtitle(mode, selectedTemplate, selectedIkeaCategory);
+  const title = getSidebarTitle(mode, store, selectedTemplate, selectedCategory);
+  const subtitle = getSidebarSubtitle(mode, store, selectedTemplate, selectedCategory);
 
   return (
     <aside className={SIDEBAR_PANEL_CLASS}>
@@ -59,25 +69,31 @@ export default function AestheticSidebar({
                 setSelectedTemplate(null);
                 return;
               }
-              if (selectedIkeaCategory) {
-                setSelectedIkeaCategory(null);
+              if (selectedCategory) {
+                setSelectedCategory(null);
                 return;
               }
+              if (mode === "themes" || mode === "categories") {
+                setMode("store");
+                return;
+              }
+              setStore(null);
               setMode("choice");
             }}
             className={`${SIDEBAR_BACK_PILL_CLASS} mb-5`}
           >
             <span aria-hidden="true">←</span>
-            {getBackLabel(selectedTemplate, selectedIkeaCategory)}
+            {getBackLabel(mode, store, selectedTemplate, selectedCategory)}
           </button>
         )}
 
         {mode === "choice" ? (
           <SourceChoicePanel
-            onUseTemplates={() => setMode("templates")}
-            onShopIkea={() => {
-              setSelectedIkeaCategory(null);
-              setMode("ikea");
+            onShopStore={(nextStore) => {
+              setStore(nextStore);
+              setSelectedTemplate(null);
+              setSelectedCategory(null);
+              setMode("store");
             }}
           />
         ) : (
@@ -87,21 +103,41 @@ export default function AestheticSidebar({
               {subtitle && <p className="text-sm leading-relaxed text-mist">{subtitle}</p>}
             </header>
 
-            {mode === "ikea" ? (
-              <IkeaBrowsePanel
-                selectedCategory={selectedIkeaCategory}
-                onSelectCategory={setSelectedIkeaCategory}
-                onProductSelect={onIkeaProductSelect}
+            {mode === "store" && store && (
+              <StoreModePanel
+                store={store}
+                onShopByTheme={() => {
+                  setSelectedTemplate(null);
+                  setMode("themes");
+                }}
+                onShopByCategory={() => {
+                  setSelectedCategory(null);
+                  setMode("categories");
+                }}
               />
-            ) : selectedTemplate ? (
-              <AestheticSearchPanel
-                key={selectedTemplate.id}
-                aestheticLabel={selectedTemplate.label}
-                onProductSelect={onIkeaProductSelect}
-              />
-            ) : (
-              <TemplateList onSelect={setSelectedTemplate} />
             )}
+
+            {mode === "categories" && store && (
+              <IkeaBrowsePanel
+                store={store}
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+                onProductSelect={onProductSelect}
+              />
+            )}
+
+            {mode === "themes" &&
+              store &&
+              (selectedTemplate ? (
+                <AestheticSearchPanel
+                  key={`${store}-${selectedTemplate.id}`}
+                  store={store}
+                  aestheticLabel={selectedTemplate.label}
+                  onProductSelect={onProductSelect}
+                />
+              ) : (
+                <TemplateList onSelect={setSelectedTemplate} />
+              ))}
           </>
         )}
       </div>
@@ -112,22 +148,26 @@ export default function AestheticSidebar({
 function getChromeState(
   mode: SidebarMode,
   selectedTemplate: TemplateSummary | null,
-  selectedIkeaCategory: IkeaCategory | null,
+  selectedCategory: StoreCategory | null,
 ): StudioChromeState {
   if (selectedTemplate) {
     return { view: "aesthetic-search", aestheticLabel: selectedTemplate.label };
   }
 
-  if (selectedIkeaCategory) {
-    return { view: "ikea-category" };
+  if (selectedCategory) {
+    return { view: "category" };
   }
 
-  if (mode === "templates") {
+  if (mode === "themes") {
     return { view: "aesthetics" };
   }
 
-  if (mode === "ikea") {
-    return { view: "ikea" };
+  if (mode === "categories") {
+    return { view: "categories" };
+  }
+
+  if (mode === "store") {
+    return { view: "store" };
   }
 
   return { view: "ready" };
@@ -135,23 +175,28 @@ function getChromeState(
 
 function getSidebarTitle(
   mode: SidebarMode,
+  store: ShoppingStore | null,
   selectedTemplate: TemplateSummary | null,
-  selectedIkeaCategory: IkeaCategory | null,
+  selectedCategory: StoreCategory | null,
 ): string {
   if (selectedTemplate) {
     return selectedTemplate.label;
   }
 
-  if (selectedIkeaCategory) {
-    return selectedIkeaCategory.name;
+  if (selectedCategory) {
+    return selectedCategory.name;
   }
 
-  if (mode === "templates") {
+  if (mode === "themes") {
     return "Pick your aesthetic";
   }
 
-  if (mode === "ikea") {
-    return "Shop IKEA";
+  if (mode === "categories" && store) {
+    return `Shop ${STORE_LABELS[store]}`;
+  }
+
+  if (mode === "store" && store) {
+    return `Shop ${STORE_LABELS[store]}`;
   }
 
   return "Room ready";
@@ -159,49 +204,60 @@ function getSidebarTitle(
 
 function getSidebarSubtitle(
   mode: SidebarMode,
+  store: ShoppingStore | null,
   selectedTemplate: TemplateSummary | null,
-  selectedIkeaCategory: IkeaCategory | null,
+  selectedCategory: StoreCategory | null,
 ): string | null {
-  if (selectedTemplate) {
-    return `Search IKEA for pieces that fit the ${selectedTemplate.label} aesthetic.`;
+  const storeLabel = store ? STORE_LABELS[store] : null;
+
+  if (selectedTemplate && storeLabel) {
+    return `Search ${storeLabel} for pieces that fit the ${selectedTemplate.label} aesthetic.`;
   }
 
-  if (selectedIkeaCategory) {
+  if (selectedCategory) {
     return "Browse pieces and add them to your room.";
   }
 
-  if (mode === "templates") {
+  if (mode === "themes") {
     return "Find a look that feels like you. Choose a style to explore in your room.";
   }
 
-  if (mode === "ikea") {
-    return "Browse IKEA categories for furniture and decor that fits your room.";
+  if (mode === "categories" && storeLabel) {
+    return `Browse ${storeLabel} categories for furniture and decor that fits your room.`;
+  }
+
+  if (mode === "store" && storeLabel) {
+    return `Shop ${storeLabel} by theme or category.`;
   }
 
   return null;
 }
 
 function getBackLabel(
+  mode: SidebarMode,
+  store: ShoppingStore | null,
   selectedTemplate: TemplateSummary | null,
-  selectedIkeaCategory: IkeaCategory | null,
+  selectedCategory: StoreCategory | null,
 ): string {
   if (selectedTemplate) {
     return "Your aesthetics";
   }
 
-  if (selectedIkeaCategory) {
-    return "Shop IKEA";
+  if (selectedCategory && store) {
+    return `Shop ${STORE_LABELS[store]}`;
+  }
+
+  if ((mode === "themes" || mode === "categories") && store) {
+    return `Shop ${STORE_LABELS[store]}`;
   }
 
   return "Room ready";
 }
 
 function SourceChoicePanel({
-  onUseTemplates,
-  onShopIkea,
+  onShopStore,
 }: {
-  onUseTemplates: () => void;
-  onShopIkea: () => void;
+  onShopStore: (store: ShoppingStore) => void;
 }) {
   return (
     <div className="flex min-h-full flex-col gap-6">
@@ -219,46 +275,20 @@ function SourceChoicePanel({
           Make it yours
         </h3>
 
-        <button
-          type="button"
-          onClick={onUseTemplates}
-          className="group flex w-full items-center gap-3 rounded-2xl border border-night-line/60 bg-[#24182c] p-3 text-left transition-colors hover:border-mist/50"
-        >
-          <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl bg-night-sunken">
-            <Image
-              src={TEMPLATES_PREVIEW_IMAGE}
-              alt=""
-              fill
-              sizes="5rem"
-              className="object-cover"
-            />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-ivory">Use templates</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-mist">
-              Find a look you love, then make it yours.
-            </p>
-          </div>
-          <span className={SIDEBAR_CIRCLE_ACTION_CLASS} aria-hidden="true">
-            →
-          </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={onShopIkea}
-          className="group flex w-full items-start justify-between gap-3 rounded-2xl border border-night-line/80 bg-transparent px-4 py-3.5 text-left transition-colors hover:border-mist/50"
-        >
-          <div>
-            <p className="text-sm font-semibold text-ivory">Shop directly from IKEA</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-mist">
-              Start with the pieces you love.
-            </p>
-          </div>
-          <span className="mt-0.5 text-sm text-mist transition-colors group-hover:text-ivory" aria-hidden="true">
-            ↗
-          </span>
-        </button>
+        <StoreChoiceButton
+          title="Shop from Amazon"
+          description="Browse Amazon furniture and decor for your room."
+          logoSrc="/logos/amazon-logo.png"
+          logoAlt="Amazon"
+          onClick={() => onShopStore("amazon")}
+        />
+        <StoreChoiceButton
+          title="Shop from IKEA"
+          description="Start with the pieces you love."
+          logoSrc="/logos/ikea-logo.png"
+          logoAlt="IKEA"
+          onClick={() => onShopStore("ikea")}
+        />
       </section>
 
       <section className="mt-auto flex flex-col gap-2 border-t border-night-line/60 pt-5">
@@ -268,6 +298,70 @@ function SourceChoicePanel({
         <p className="text-xs text-mist/70">Add a piece to start arranging.</p>
       </section>
     </div>
+  );
+}
+
+function StoreModePanel({
+  store,
+  onShopByTheme,
+  onShopByCategory,
+}: {
+  store: ShoppingStore;
+  onShopByTheme: () => void;
+  onShopByCategory: () => void;
+}) {
+  const storeLabel = STORE_LABELS[store];
+
+  return (
+    <section className="flex flex-col gap-3">
+      <StoreChoiceButton
+        title="Shop by theme"
+        description={`Find ${storeLabel} pieces that match an aesthetic.`}
+        onClick={onShopByTheme}
+      />
+      <StoreChoiceButton
+        title="Shop by category"
+        description={`Browse ${storeLabel} categories for furniture and decor.`}
+        onClick={onShopByCategory}
+      />
+    </section>
+  );
+}
+
+function StoreChoiceButton({
+  title,
+  description,
+  logoSrc,
+  logoAlt,
+  onClick,
+}: {
+  title: string;
+  description: string;
+  logoSrc?: string;
+  logoAlt?: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group flex w-full items-center justify-between gap-3 rounded-2xl border border-night-line/80 bg-transparent px-4 py-3.5 text-left transition-colors hover:border-mist/50"
+    >
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        {logoSrc && (
+          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-night-sunken">
+            <Image src={logoSrc} alt={logoAlt ?? ""} fill sizes="3rem" className="object-cover" />
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-ivory">{title}</p>
+          <p className="mt-0.5 text-xs leading-relaxed text-mist">{description}</p>
+        </div>
+      </div>
+      <span className="text-sm text-mist transition-colors group-hover:text-ivory" aria-hidden="true">
+        ↗
+      </span>
+    </button>
   );
 }
 
