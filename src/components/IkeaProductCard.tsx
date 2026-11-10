@@ -4,11 +4,11 @@ import {
   SIDEBAR_ITEM_ACTION_BUTTON_DISABLED_CLASS,
   SIDEBAR_ITEM_ACTION_BUTTON_PRIMARY_CLASS,
 } from "@/components/sidebarStyles";
-import type { IkeaProduct } from "@/lib/api/ikea";
+import type { StoreProduct } from "@/lib/api/catalog";
 
 interface IkeaProductCardProps {
-  product: IkeaProduct;
-  onSelect: (product: IkeaProduct) => void;
+  product: StoreProduct;
+  onSelect: (product: StoreProduct) => void;
 }
 
 export default function IkeaProductCard({ product, onSelect }: IkeaProductCardProps) {
@@ -25,7 +25,7 @@ export default function IkeaProductCard({ product, onSelect }: IkeaProductCardPr
         className="relative aspect-square w-full bg-ivory/95 transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
       >
         {product.mainImageUrl ? (
-          // IKEA product images are hosted on ikea.com; native img avoids Next remote config.
+          // Product images are hosted remotely; native img avoids Next remote config.
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={product.mainImageUrl}
@@ -77,7 +77,7 @@ export default function IkeaProductCard({ product, onSelect }: IkeaProductCardPr
   );
 }
 
-function formatPrice(price: IkeaProduct["salesPrice"]): string | null {
+function formatPrice(price: StoreProduct["salesPrice"]): string | null {
   if (price?.numeral === undefined || !price.currencyCode) {
     return null;
   }

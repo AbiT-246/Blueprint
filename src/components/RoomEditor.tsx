@@ -8,13 +8,13 @@ import PerspectivePanel from "@/components/PerspectivePanel";
 import ProcessingOverlay from "@/components/ProcessingOverlay";
 import RoomCanvas, { type RoomCanvasHandle } from "@/components/RoomCanvas";
 import SelectedItemToolbar from "@/components/SelectedItemToolbar";
-import type { IkeaProduct } from "@/lib/api/ikea";
+import type { StoreProduct } from "@/lib/api/catalog";
 import {
   createImageTo3DFromUrl,
   getMeshyGlbProxyUrl,
   waitForMeshyTask,
 } from "@/lib/api/meshy";
-import { createPlaceableItemFromIkeaProduct } from "@/lib/ikea/generatedItem";
+import { createPlaceableItemFromStoreProduct } from "@/lib/ikea/generatedItem";
 import { type CameraSettings, DEFAULT_CAMERA_SETTINGS } from "@/lib/room-canvas/cameraSettings";
 import type { ItemSelection } from "@/lib/room-canvas/PlacedItem";
 import type { PlaceableItem } from "@/lib/room-canvas/RoomScene";
@@ -57,8 +57,8 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
       .catch(() => setPlacementError(`Unable to place ${item.title}. Please try again.`));
   }, []);
 
-  const handleIkeaProductSelect = useCallback(
-    async (product: IkeaProduct) => {
+  const handleProductSelect = useCallback(
+    async (product: StoreProduct) => {
       if (isGenerating) {
         return;
       }
@@ -89,7 +89,7 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
         }
 
         placeItem(
-          createPlaceableItemFromIkeaProduct(product, getMeshyGlbProxyUrl(taskId)),
+          createPlaceableItemFromStoreProduct(product, getMeshyGlbProxyUrl(taskId)),
         );
       } catch (error) {
         if (isAbortError(error)) {
@@ -168,7 +168,7 @@ export default function RoomEditor({ imageUrl, onClose }: RoomEditorProps) {
         </div>
 
         <AestheticSidebar
-          onIkeaProductSelect={handleIkeaProductSelect}
+          onProductSelect={handleProductSelect}
           onChromeChange={setChromeState}
         />
       </div>

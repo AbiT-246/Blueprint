@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AmazonModule } from './amazon/amazon.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IkeaModule } from './ikea/ikea.module';
@@ -15,6 +16,7 @@ import { TemplatesModule } from './templates/templates.module';
     OpenAiModule,
     TemplatesModule,
     IkeaModule,
+    AmazonModule,
     MeshyModule,
   ],
   controllers: [AppController],

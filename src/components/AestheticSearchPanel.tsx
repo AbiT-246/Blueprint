@@ -7,34 +7,43 @@ import {
   SIDEBAR_SEARCH_INPUT_CLASS,
   SIDEBAR_SEARCH_SUBMIT_CLASS,
 } from "@/components/sidebarStyles";
-import { searchIkeaProducts, type IkeaProduct } from "@/lib/api/ikea";
+import {
+  searchStoreProducts,
+  STORE_LABELS,
+  type ShoppingStore,
+  type StoreProduct,
+} from "@/lib/api/catalog";
 
 const SEARCH_PAGE_SIZE = 24;
 const DEFAULT_SEARCH_KEYWORD = "decor";
 
 interface AestheticSearchPanelProps {
+  store: ShoppingStore;
   aestheticLabel: string;
-  onProductSelect: (product: IkeaProduct) => void;
+  onProductSelect: (product: StoreProduct) => void;
 }
 
 type SearchState =
   | { status: "loading" }
   | { status: "error" }
-  | { status: "ready"; products: IkeaProduct[]; searchPhrase: string };
+  | { status: "ready"; products: StoreProduct[]; searchPhrase: string };
 
 export default function AestheticSearchPanel({
+  store,
   aestheticLabel,
   onProductSelect,
 }: AestheticSearchPanelProps) {
   const [keyword, setKeyword] = useState("");
   const [searchState, setSearchState] = useState<SearchState>({ status: "loading" });
+  const storeLabel = STORE_LABELS[store];
 
   useEffect(() => {
     let isActive = true;
 
     setSearchState({ status: "loading" });
 
-    searchIkeaProducts(
+    searchStoreProducts(
+      store,
       buildAestheticSearchQuery(aestheticLabel, DEFAULT_SEARCH_KEYWORD),
       SEARCH_PAGE_SIZE,
     )
@@ -58,7 +67,7 @@ export default function AestheticSearchPanel({
     return () => {
       isActive = false;
     };
-  }, [aestheticLabel]);
+  }, [store, aestheticLabel]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -72,7 +81,7 @@ export default function AestheticSearchPanel({
     setSearchState({ status: "loading" });
 
     try {
-      const response = await searchIkeaProducts(query, SEARCH_PAGE_SIZE);
+      const response = await searchStoreProducts(store, query, SEARCH_PAGE_SIZE);
       setSearchState({
         status: "ready",
         products: response.products,
@@ -91,7 +100,7 @@ export default function AestheticSearchPanel({
           value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
           placeholder="e.g. decor, lamp, rug"
-          aria-label={`Search IKEA for ${aestheticLabel} items`}
+          aria-label={`Search ${storeLabel} for ${aestheticLabel} items`}
           className={SIDEBAR_SEARCH_INPUT_CLASS}
         />
         <button
@@ -104,11 +113,14 @@ export default function AestheticSearchPanel({
       </form>
 
       {searchState.status === "loading" && (
-        <SidebarStatusMessage message="Searching IKEA products..." />
+        <SidebarStatusMessage message={`Searching ${storeLabel} products...`} />
       )}
 
       {searchState.status === "error" && (
-        <SidebarStatusMessage message="Unable to search IKEA products. Please try again." isError />
+        <SidebarStatusMessage
+          message={`Unable to search ${storeLabel} products. Please try again.`}
+          isError
+        />
       )}
 
       {searchState.status === "ready" && (

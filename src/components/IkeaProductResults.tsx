@@ -2,11 +2,11 @@
 
 import IkeaProductCard from "@/components/IkeaProductCard";
 import SidebarStatusMessage from "@/components/SidebarStatusMessage";
-import type { IkeaProduct } from "@/lib/api/ikea";
+import type { StoreProduct } from "@/lib/api/catalog";
 
 interface IkeaProductResultsProps {
-  products: IkeaProduct[];
-  onProductSelect: (product: IkeaProduct) => void;
+  products: StoreProduct[];
+  onProductSelect: (product: StoreProduct) => void;
   emptyMessage?: string;
 }
 

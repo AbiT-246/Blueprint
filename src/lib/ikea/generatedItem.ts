@@ -1,13 +1,13 @@
-import type { IkeaProduct } from "@/lib/api/ikea";
+import type { StoreProduct } from "@/lib/api/catalog";
 import type { PlaceableItem } from "@/lib/room-canvas/RoomScene";
 
-/** Neutral real-world size used until IKEA measure parsing exists. */
+/** Neutral real-world size used until product measure parsing exists. */
 const DEFAULT_GENERATED_WIDTH_METERS = 1;
 const DEFAULT_GENERATED_DEPTH_METERS = 1;
 const DEFAULT_GENERATED_HEIGHT_METERS = 1;
 
-export function createPlaceableItemFromIkeaProduct(
-  product: IkeaProduct,
+export function createPlaceableItemFromStoreProduct(
+  product: StoreProduct,
   modelUrl: string,
 ): PlaceableItem {
   return {

@@ -6,50 +6,66 @@ import SidebarStatusMessage from "@/components/SidebarStatusMessage";
 import { SIDEBAR_OPTION_BUTTON_CLASS, SIDEBAR_SEARCH_SUBMIT_CLASS } from "@/components/sidebarStyles";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
 import {
-  getIkeaCategories,
-  getIkeaMoreProducts,
-  getIkeaProducts,
-  type IkeaCategory,
-  type IkeaProduct,
-} from "@/lib/api/ikea";
+  getMoreStoreProducts,
+  getStoreCategories,
+  getStoreProducts,
+  STORE_LABELS,
+  type ShoppingStore,
+  type StoreCategory,
+  type StoreProduct,
+} from "@/lib/api/catalog";
 
 const INITIAL_PAGE_SIZE = 24;
 const LOAD_MORE_PAGE_SIZE = 24;
 
 interface IkeaBrowsePanelProps {
-  selectedCategory: IkeaCategory | null;
-  onSelectCategory: (category: IkeaCategory) => void;
-  onProductSelect: (product: IkeaProduct) => void;
+  store: ShoppingStore;
+  selectedCategory: StoreCategory | null;
+  onSelectCategory: (category: StoreCategory) => void;
+  onProductSelect: (product: StoreProduct) => void;
 }
 
 export default function IkeaBrowsePanel({
+  store,
   selectedCategory,
   onSelectCategory,
   onProductSelect,
 }: IkeaBrowsePanelProps) {
   if (selectedCategory) {
     return (
-      <IkeaProductList
-        key={selectedCategory.id}
+      <StoreProductList
+        key={`${store}-${selectedCategory.id}`}
+        store={store}
         category={selectedCategory}
         onProductSelect={onProductSelect}
       />
     );
   }
 
-  return <IkeaCategoryList onSelect={onSelectCategory} />;
+  return <StoreCategoryList store={store} onSelect={onSelectCategory} />;
 }
 
-function IkeaCategoryList({ onSelect }: { onSelect: (category: IkeaCategory) => void }) {
-  const categoriesResource = useAsyncResource(getIkeaCategories);
+function StoreCategoryList({
+  store,
+  onSelect,
+}: {
+  store: ShoppingStore;
+  onSelect: (category: StoreCategory) => void;
+}) {
+  const loadCategories = useCallback(() => getStoreCategories(store), [store]);
+  const categoriesResource = useAsyncResource(loadCategories);
+  const storeLabel = STORE_LABELS[store];
 
   if (categoriesResource.status === "loading") {
-    return <SidebarStatusMessage message="Loading IKEA categories..." />;
+    return <SidebarStatusMessage message={`Loading ${storeLabel} categories...`} />;
   }
 
   if (categoriesResource.status === "error") {
     return (
-      <SidebarStatusMessage message="Unable to load IKEA categories. Please try again." isError />
+      <SidebarStatusMessage
+        message={`Unable to load ${storeLabel} categories. Please try again.`}
+        isError
+      />
     );
   }
 
@@ -70,36 +86,41 @@ function IkeaCategoryList({ onSelect }: { onSelect: (category: IkeaCategory) => 
   );
 }
 
-function IkeaProductList({
+function StoreProductList({
+  store,
   category,
   onProductSelect,
 }: {
-  category: IkeaCategory;
-  onProductSelect: (product: IkeaProduct) => void;
+  store: ShoppingStore;
+  category: StoreCategory;
+  onProductSelect: (product: StoreProduct) => void;
 }) {
   const loadProducts = useCallback(
-    () => getIkeaProducts(category.id, INITIAL_PAGE_SIZE),
-    [category.id],
+    () => getStoreProducts(store, category.id, INITIAL_PAGE_SIZE),
+    [store, category.id],
   );
   const productsResource = useAsyncResource(loadProducts);
-  const [extraProducts, setExtraProducts] = useState<IkeaProduct[]>([]);
+  const [extraProducts, setExtraProducts] = useState<StoreProduct[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [loadMoreError, setLoadMoreError] = useState<string | null>(null);
+  const storeLabel = STORE_LABELS[store];
 
   if (productsResource.status === "loading") {
-    return <SidebarStatusMessage message="Loading IKEA products..." />;
+    return <SidebarStatusMessage message={`Loading ${storeLabel} products...`} />;
   }
 
   if (productsResource.status === "error") {
     return (
-      <SidebarStatusMessage message="Unable to load IKEA products. Please try again." isError />
+      <SidebarStatusMessage
+        message={`Unable to load ${storeLabel} products. Please try again.`}
+        isError
+      />
     );
   }
 
-  const initialProducts = productsResource.data.productListPage?.productWindow ?? [];
-  const products = [...initialProducts, ...extraProducts];
-  const totalCount = productsResource.data.productListPage?.productCount ?? products.length;
-  const canLoadMore = products.length < totalCount;
+  const products = [...productsResource.data.products, ...extraProducts];
+  const totalCount = productsResource.data.productCount;
+  const canLoadMore = store === "ikea" && products.length < totalCount;
 
   async function handleLoadMore() {
     setIsLoadingMore(true);
@@ -109,8 +130,7 @@ function IkeaProductList({
     const end = start + LOAD_MORE_PAGE_SIZE;
 
     try {
-      const response = await getIkeaMoreProducts(category.id, start, end);
-      const nextProducts = response.moreProducts?.productWindow ?? [];
+      const nextProducts = await getMoreStoreProducts(store, category.id, start, end);
       setExtraProducts((current) => [...current, ...nextProducts]);
     } catch {
       setLoadMoreError("Unable to load more products. Please try again.");

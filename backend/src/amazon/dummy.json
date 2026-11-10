@@ -1,0 +1,1155 @@
+{
+    "searchResult": {
+      "items": [
+        {
+          "asin": "B0DFM5JMK8",
+          "detailPageURL": "https://www.amazon.ca/dp/B0DFM5JMK8",
+          "itemInfo": {
+            "title": {
+              "displayValue": "EJIAXIN Rattan Lamp Boho Lamps Set of 2, Mini Farmhouse Table Lamps",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "EJIAXIN",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 59.98,
+                    "currency": "CAD",
+                    "displayAmount": "$59.98"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "table-lamp",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://m.media-amazon.com/images/I/71anvccsPfL.jpg"
+              },
+              "large": {
+                "url": "https://m.media-amazon.com/images/I/71anvccsPfL.jpg"
+              }
+            }
+          },
+          "imageMatch": "likely",
+          "imageSource": "Amazon CDN image surfaced for the EJIAXIN rattan lamp search"
+        },
+        {
+          "asin": "B0DKNKDV9V",
+          "detailPageURL": "https://www.amazon.ca/dp/B0DKNKDV9V",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Yusong Rattan Arched Bookshelf, 74-Inch, 5-Tier",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Yusong",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 249.99,
+                    "currency": "CAD",
+                    "displayAmount": "$249.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "bookshelf",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://img-va.myshopline.com/image/store/1725604496293/6500910.webp?h=1300&w=1300"
+              },
+              "large": {
+                "url": "https://img-va.myshopline.com/image/store/1725604496293/6500910.webp?h=1300&w=1300"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "HomeyFad arched rattan bookshelf product page"
+        },
+        {
+          "asin": "B0CW2XBGRN",
+          "detailPageURL": "https://www.amazon.ca/dp/B0CW2XBGRN",
+          "itemInfo": {
+            "title": {
+              "displayValue": "CHITA Braid Accent Chair with Wood Frame and Paper Cord Armrests",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "CHITA",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 283.42,
+                    "currency": "CAD",
+                    "displayAmount": "$283.42"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "accent-chair",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://cdn.shopify.com/s/files/1/0558/6151/0314/products/chita-living-accent-chair-sienna-modern-braid-chair-550317.jpg?v=1710836561"
+              },
+              "large": {
+                "url": "https://cdn.shopify.com/s/files/1/0558/6151/0314/products/chita-living-accent-chair-sienna-modern-braid-chair-550317.jpg?v=1710836561"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "CHITA product page"
+        },
+        {
+          "asin": "B0CNP49L7L",
+          "detailPageURL": "https://www.amazon.ca/dp/B0CNP49L7L",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Cinkeda Boho Rattan Table Lamps Set of 2, 26-Inch",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Cinkeda",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 112.99,
+                    "currency": "CAD",
+                    "displayAmount": "$112.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "table-lamp",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://images.thdstatic.com/productImages/b5402724-ca24-48e4-901c-06d12f281037/svn/lamp-sets-td-131-64_600.jpg"
+              },
+              "large": {
+                "url": "https://images.thdstatic.com/productImages/b5402724-ca24-48e4-901c-06d12f281037/svn/lamp-sets-td-131-64_600.jpg"
+              }
+            }
+          },
+          "imageMatch": "likely",
+          "imageSource": "The Home Depot Cinkeda Tiburon rattan lamp listing"
+        },
+        {
+          "asin": "B0BVB483Q7",
+          "detailPageURL": "https://www.amazon.ca/dp/B0BVB483Q7",
+          "itemInfo": {
+            "title": {
+              "displayValue": "SICOTAS 71-Inch 5-Tier Bookshelf with Doors",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "SICOTAS",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 239.99,
+                    "currency": "CAD",
+                    "displayAmount": "$239.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "bookshelf",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://www.sicotas.com/cdn/shop/products/81X3fFK_0ZL._AC_SL1500.jpg?v=1718699289&width=1346"
+              },
+              "large": {
+                "url": "https://www.sicotas.com/cdn/shop/products/81X3fFK_0ZL._AC_SL1500.jpg?v=1718699289&width=1346"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "SICOTAS Savanna bookshelf product page"
+        },
+        {
+          "asin": "B0FC65Q2NC",
+          "detailPageURL": "https://www.amazon.ca/dp/B0FC65Q2NC",
+          "itemInfo": {
+            "title": {
+              "displayValue": "HOMCOM 24-Inch Round Coffee Table with Hammered Tray Top",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "HOMCOM",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 84.98,
+                    "currency": "CAD",
+                    "displayAmount": "$84.98"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "coffee-table",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://img-us.aosomcdn.com/100/product/2025/05/06/phX337196a561611c.jpg"
+              },
+              "large": {
+                "url": "https://img-us.aosomcdn.com/100/product/2025/05/06/phX337196a561611c.jpg"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "Aosom Canada HOMCOM coffee table listing"
+        },
+        {
+          "asin": "B0DFH74MSL",
+          "detailPageURL": "https://www.amazon.ca/dp/B0DFH74MSL",
+          "itemInfo": {
+            "title": {
+              "displayValue": "SAETSFEG Upholstered Patchwork Accent Chair",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "SAETSFEG",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 229.98,
+                    "currency": "CAD",
+                    "displayAmount": "$229.98"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "accent-chair",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://m.media-amazon.com/images/I/817iXMQ7kpL._AC_UL320_.jpg"
+              },
+              "large": {
+                "url": "https://m.media-amazon.com/images/I/817iXMQ7kpL._AC_UL320_.jpg"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "Amazon CDN image for the SAETSFEG patchwork chair listing"
+        },
+        {
+          "asin": "B0CMQBXKWQ",
+          "detailPageURL": "https://www.amazon.ca/dp/B0CMQBXKWQ",
+          "itemInfo": {
+            "title": {
+              "displayValue": "VASAGLE 6-Tier Bookcase with Rattan-Like Door",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "VASAGLE",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 199.19,
+                    "currency": "CAD",
+                    "displayAmount": "$199.19"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "bookshelf",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://www.dealdoktor.de/app/uploads/2024/07/VASAGLE_Buecherregal_mit_Tueren_in_Rattan-Optik.png"
+              },
+              "large": {
+                "url": "https://www.dealdoktor.de/app/uploads/2024/07/VASAGLE_Buecherregal_mit_Tueren_in_Rattan-Optik.png"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "VASAGLE rattan-door bookshelf product image"
+        },
+        {
+          "asin": "B0D5M3VK4T",
+          "detailPageURL": "https://www.amazon.ca/dp/B0D5M3VK4T",
+          "itemInfo": {
+            "title": {
+              "displayValue": "EDISHINE Small Boho Table Lamp with Linen Shade and Wood Tripod Base",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "EDISHINE",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 41.99,
+                    "currency": "CAD",
+                    "displayAmount": "$41.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "table-lamp",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://lightsdaddy.com/cdn/shop/files/81kb-oCJ6qL.jpg?v=1763738651&width=%7Bwidth%7D"
+              },
+              "large": {
+                "url": "https://lightsdaddy.com/cdn/shop/files/81kb-oCJ6qL.jpg?v=1763738651&width=%7Bwidth%7D"
+              }
+            }
+          },
+          "imageMatch": "likely",
+          "imageSource": "EDISHINE tripod table lamp product page; same style, different listed size"
+        },
+        {
+          "asin": "B0D9BKMST7",
+          "detailPageURL": "https://www.amazon.ca/dp/B0D9BKMST7",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Giantex Round Coffee Table Set of 2 with Pine Wood Tops",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Giantex",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 159.99,
+                    "currency": "CAD",
+                    "displayAmount": "$159.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "coffee-table",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://www.giantex.com/cdn/shop/products/image_1_567cf453-7196-4611-9958-a223c1bde485.jpg?v=1681200484&width=1080"
+              },
+              "large": {
+                "url": "https://www.giantex.com/cdn/shop/products/image_1_567cf453-7196-4611-9958-a223c1bde485.jpg?v=1681200484&width=1080"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "Giantex round coffee table set product page"
+        },
+        {
+          "asin": "B0CY8S5F8L",
+          "detailPageURL": "https://www.amazon.ca/dp/B0CY8S5F8L",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Stead 4-Tier Arched Bookshelf with Natural Rattan Backing",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Stead",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 371.72,
+                    "currency": "CAD",
+                    "displayAmount": "$371.72"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "bookshelf",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://img-va.myshopline.com/image/store/1725604496293/6500910.webp?h=1300&w=1300"
+              },
+              "large": {
+                "url": "https://img-va.myshopline.com/image/store/1725604496293/6500910.webp?h=1300&w=1300"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "HomeyFad arched rattan bookshelf product page"
+        },
+        {
+          "asin": "B0GMWJQ7HG",
+          "detailPageURL": "https://www.amazon.ca/dp/B0GMWJQ7HG",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Garvee Boucle Accent Chair with Rattan Arms",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Garvee",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 167.99,
+                    "currency": "CAD",
+                    "displayAmount": "$167.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "accent-chair",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://mobileimages.lowes.com/productimages/f971ee39-459c-4187-8a4d-fff2b3151705/83689507.jpeg?size=pdhz"
+              },
+              "large": {
+                "url": "https://mobileimages.lowes.com/productimages/f971ee39-459c-4187-8a4d-fff2b3151705/83689507.jpeg?size=pdhz"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "Lowe's GarveeLife boucle/rattan accent chair listing"
+        },
+        {
+          "asin": "B0F9PG5PFX",
+          "detailPageURL": "https://www.amazon.ca/dp/B0F9PG5PFX",
+          "itemInfo": {
+            "title": {
+              "displayValue": "LIVEBOX Vintage Tribal Medallion Washable Area Rug",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "LIVEBOX",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 207.63,
+                    "currency": "CAD",
+                    "displayAmount": "$207.63"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "area-rug",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://www.garvee.com/cdn/shop/files/91xOsfHqz6L_f34133f6-fe44-48f7-9907-9d113b051e8f.jpg?v=1723037978"
+              },
+              "large": {
+                "url": "https://www.garvee.com/cdn/shop/files/91xOsfHqz6L_f34133f6-fe44-48f7-9907-9d113b051e8f.jpg?v=1723037978"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "Garvee vintage tribal medallion rug product page"
+        },
+        {
+          "asin": "B0DXV3D7BH",
+          "detailPageURL": "https://www.amazon.ca/dp/B0DXV3D7BH",
+          "itemInfo": {
+            "title": {
+              "displayValue": "IOWER Macrame Wall Hanging, 27 x 31 Inches",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "IOWER",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 66.06,
+                    "currency": "CAD",
+                    "displayAmount": "$66.06"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "wall-hanging",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://iower.cn/cdn/shop/files/bohowallhanging_0a19c90a-02e0-454a-9151-27720d2fd20e.jpg?v=1773649247&width=1445"
+              },
+              "large": {
+                "url": "https://iower.cn/cdn/shop/files/bohowallhanging_0a19c90a-02e0-454a-9151-27720d2fd20e.jpg?v=1773649247&width=1445"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "IOWER handmade macrame wall decor product page"
+        },
+        {
+          "asin": "B0DBJHC4HY",
+          "detailPageURL": "https://www.amazon.ca/dp/B0DBJHC4HY",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Nathan James Mina Rattan Wood End Table with Storage",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Nathan James",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 279.41,
+                    "currency": "CAD",
+                    "displayAmount": "$279.41"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "nightstand",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://images.thdstatic.com/productImages/10f19b20-bf1f-4e85-8713-245e91b0f31e/svn/black-oak-black-nightstands-33204-64_1000.jpg"
+              },
+              "large": {
+                "url": "https://images.thdstatic.com/productImages/10f19b20-bf1f-4e85-8713-245e91b0f31e/svn/black-oak-black-nightstands-33204-64_1000.jpg"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "The Home Depot Nathan James Mina end table listing"
+        },
+        {
+          "asin": "B0DTHV9131",
+          "detailPageURL": "https://www.amazon.ca/dp/B0DTHV9131",
+          "itemInfo": {
+            "title": {
+              "displayValue": "LB Macrame Wall Hanging, Sunset Wall Art",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "LB",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 27.94,
+                    "currency": "CAD",
+                    "displayAmount": "$27.94"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "wall-hanging",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://shopsairen.com/cdn/shop/products/kristiknots_mediumsunset.jpg?v=1626159611"
+              },
+              "large": {
+                "url": "https://shopsairen.com/cdn/shop/products/kristiknots_mediumsunset.jpg?v=1626159611"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "Shop Sairen sunset macraweave product page"
+        },
+        {
+          "asin": "B0FXWDR2ZH",
+          "detailPageURL": "https://www.amazon.ca/dp/B0FXWDR2ZH",
+          "itemInfo": {
+            "title": {
+              "displayValue": "ZORYATA 13-Inch Rattan Pendant Light",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "ZORYATA",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 56.99,
+                    "currency": "CAD",
+                    "displayAmount": "$56.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "pendant-light",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://mobileimages.lowes.com/productimages/1c0b1da9-27cf-4be6-bc37-60a6d14f494c/JYL1401A_thumbnail.jpg?size=pdhism"
+              },
+              "large": {
+                "url": "https://mobileimages.lowes.com/productimages/1c0b1da9-27cf-4be6-bc37-60a6d14f494c/JYL1401A_thumbnail.jpg?size=pdhism"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "Lowe's woven rattan pendant light listing"
+        },
+        {
+          "asin": "B086L16LQY",
+          "detailPageURL": "https://www.amazon.ca/dp/B086L16LQY",
+          "itemInfo": {
+            "title": {
+              "displayValue": "SAFAVIEH Madison Collection Boho Chic Medallion Distressed Rug",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "SAFAVIEH",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 137.99,
+                    "currency": "CAD",
+                    "displayAmount": "$137.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "area-rug",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://ak1.ostkcdn.com/images/products/is/images/direct/7d144bc45922f32eabdceb59ebb66462cce6b074/SAFAVIEH-Madison-Katelijne-Boho-Medallion-Distressed-Area-Rug.jpg?carousel=true&impolicy=medium&imwidth=714"
+              },
+              "large": {
+                "url": "https://ak1.ostkcdn.com/images/products/is/images/direct/7d144bc45922f32eabdceb59ebb66462cce6b074/SAFAVIEH-Madison-Katelijne-Boho-Medallion-Distressed-Area-Rug.jpg?carousel=true&impolicy=medium&imwidth=714"
+              }
+            }
+          },
+          "imageMatch": "likely",
+          "imageSource": "Overstock SAFAVIEH Madison boho medallion rug listing"
+        },
+        {
+          "asin": "B0BNVFKX3L",
+          "detailPageURL": "https://www.amazon.ca/dp/B0BNVFKX3L",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Leesentec Moroccan Geometric Stripe Area Rug",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Leesentec",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 59.99,
+                    "currency": "CAD",
+                    "displayAmount": "$59.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "area-rug",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://i5.walmartimages.com/seo/Haperlare-Geometric-Rug-6-x-9-Boho-Moroccan-Area-Washable-Non-Slip-Living-Room-Floor-Carpet-Vintage-Bedroom-Soft-Low-Pile-Indoor-Rug-Beige-Black_b6ceb333-0702-4a8f-8858-a56ff7ef00e9.424b440c29f607bd8effefbbc7c45b37.jpeg"
+              },
+              "large": {
+                "url": "https://i5.walmartimages.com/seo/Haperlare-Geometric-Rug-6-x-9-Boho-Moroccan-Area-Washable-Non-Slip-Living-Room-Floor-Carpet-Vintage-Bedroom-Soft-Low-Pile-Indoor-Rug-Beige-Black_b6ceb333-0702-4a8f-8858-a56ff7ef00e9.424b440c29f607bd8effefbbc7c45b37.jpeg"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "Walmart Moroccan geometric boho rug listing"
+        },
+        {
+          "asin": "B0D25MV6CV",
+          "detailPageURL": "https://www.amazon.ca/dp/B0D25MV6CV",
+          "itemInfo": {
+            "title": {
+              "displayValue": "GUDAGUU Woven Macrame Wall Decor, Sunset Landscape",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "GUDAGUU",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 11.99,
+                    "currency": "CAD",
+                    "displayAmount": "$11.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "wall-hanging",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://jakalin.com/cdn/shop/files/black_decor.jpg?v=1751533133&width=1024"
+              },
+              "large": {
+                "url": "https://jakalin.com/cdn/shop/files/black_decor.jpg?v=1751533133&width=1024"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "JAKALIN sunset dip-dye macrame wall art product page"
+        },
+        {
+          "asin": "B0CRDRTBSY",
+          "detailPageURL": "https://www.amazon.ca/dp/B0CRDRTBSY",
+          "itemInfo": {
+            "title": {
+              "displayValue": "SEIHONG 4-Light Rattan Pendant Light",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "SEIHONG",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 89.99,
+                    "currency": "CAD",
+                    "displayAmount": "$89.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "pendant-light",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://lightsdaddy.com/cdn/shop/files/718N5LVdS-L_4f79104a-4de5-4f7a-91e0-e2abcfeb712f.jpg?v=1758618902&width=1200"
+              },
+              "large": {
+                "url": "https://lightsdaddy.com/cdn/shop/files/718N5LVdS-L_4f79104a-4de5-4f7a-91e0-e2abcfeb712f.jpg?v=1758618902&width=1200"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "Lightsdaddy four-light rattan chandelier listing"
+        },
+        {
+          "asin": "B0FYRPCX9R",
+          "detailPageURL": "https://www.amazon.ca/dp/B0FYRPCX9R",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Homegar Small Upholstered Ottoman Footrest",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Homegar",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 43.99,
+                    "currency": "CAD",
+                    "displayAmount": "$43.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "ottoman",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://homcomstore.com/cdn/shop/files/H04GmlaV6MK1sn7_6wjFPQaosompOmFLdWhNhFTD6K_wGwn58ZtMzdOZb9aru-UbqjwYV0.jpg?v=1762446679"
+              },
+              "large": {
+                "url": "https://homcomstore.com/cdn/shop/files/H04GmlaV6MK1sn7_6wjFPQaosompOmFLdWhNhFTD6K_wGwn58ZtMzdOZb9aru-UbqjwYV0.jpg?v=1762446679"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "HOMCOM small beige ottoman footrest product page"
+        },
+        {
+          "asin": "B0CJ2TZW55",
+          "detailPageURL": "https://www.amazon.ca/dp/B0CJ2TZW55",
+          "itemInfo": {
+            "title": {
+              "displayValue": "IBUYKE Linen Storage Ottoman with Wood Feet",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "IBUYKE",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 57.89,
+                    "currency": "CAD",
+                    "displayAmount": "$57.89"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "storage-ottoman",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://smallbee.co.uk/cdn/shop/files/ZH0245-1000-020.jpg?v=1763782736&width=1214"
+              },
+              "large": {
+                "url": "https://smallbee.co.uk/cdn/shop/files/ZH0245-1000-020.jpg?v=1763782736&width=1214"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "Smallbee linen upholstered storage ottoman product page"
+        },
+        {
+          "asin": "B0H262MMCN",
+          "detailPageURL": "https://www.amazon.ca/dp/B0H262MMCN",
+          "itemInfo": {
+            "title": {
+              "displayValue": "WondRg Beige Washable Floral Area Rug, 9 x 12 Feet",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "WondRg",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 119.99,
+                    "currency": "CAD",
+                    "displayAmount": "$119.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "area-rug",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://lahomedecor.com/cdn/shop/files/8x10LahomeElianeWashableVintageTraditionalFloralBeigeAreaRug_2.webp?v=1748227282&width=1200"
+              },
+              "large": {
+                "url": "https://lahomedecor.com/cdn/shop/files/8x10LahomeElianeWashableVintageTraditionalFloralBeigeAreaRug_2.webp?v=1748227282&width=1200"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "Lahome vintage floral beige washable rug product page"
+        },
+        {
+          "asin": "B0BY5GYZQ5",
+          "detailPageURL": "https://www.amazon.ca/dp/B0BY5GYZQ5",
+          "itemInfo": {
+            "title": {
+              "displayValue": "AyshwillDec Mini Hemp Rope Woven Pendant Light",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "AyshwillDec",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 56.99,
+                    "currency": "CAD",
+                    "displayAmount": "$56.99"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "pendant-light",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://lightsdaddy.com/cdn/shop/files/81YKj56EPJL.jpg?v=1758526259&width=1400"
+              },
+              "large": {
+                "url": "https://lightsdaddy.com/cdn/shop/files/81YKj56EPJL.jpg?v=1758526259&width=1400"
+              }
+            }
+          },
+          "imageMatch": "exact",
+          "imageSource": "Lightsdaddy AyshwillDec hemp-rope pendant light listing"
+        },
+        {
+          "asin": "B0G4QP2NNL",
+          "detailPageURL": "https://www.amazon.ca/dp/B0G4QP2NNL",
+          "itemInfo": {
+            "title": {
+              "displayValue": "Bamworld 3-Pack Wooden Plant Stands",
+              "label": "Title",
+              "locale": "en_CA"
+            },
+            "byLineInfo": {
+              "brand": {
+                "displayValue": "Bamworld",
+                "label": "Brand",
+                "locale": "en_CA"
+              }
+            }
+          },
+          "offersV2": {
+            "listings": [
+              {
+                "price": {
+                  "money": {
+                    "amount": 32.56,
+                    "currency": "CAD",
+                    "displayAmount": "$32.56"
+                  }
+                }
+              }
+            ]
+          },
+          "category": "plant-stand",
+          "images": {
+            "primary": {
+              "medium": {
+                "url": "https://media.adeo.com/mkp/d13ae601e239768906fa16428754efc6/media.jpeg?fit=bounds&format=jpg&height=3000&quality=80&width=3000"
+              },
+              "large": {
+                "url": "https://media.adeo.com/mkp/d13ae601e239768906fa16428754efc6/media.jpeg?fit=bounds&format=jpg&height=3000&quality=80&width=3000"
+              }
+            }
+          },
+          "imageMatch": "representative",
+          "imageSource": "Leroy Merlin wooden tiered plant stand listing"
+        }
+      ],
+      "totalResultCount": 26,
+      "searchURL": "https://www.amazon.ca/s?k=indie+boho+home+furniture+decor",
+      "searchRefinements": null,
+      "imageFieldNote": "images.primary.medium.url and images.primary.large.url are included for UI testing. imageMatch and imageSource are custom metadata; representative images are style/category stand-ins, not verified photos of the exact ASIN."
+    }
+  }
+  
