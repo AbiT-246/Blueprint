@@ -22,6 +22,7 @@ import { createPlacementStrategies } from "./placement/createPlacementStrategies
 import { applyCameraSettings, createRoomCamera } from "./RoomCamera";
 import { DEFAULT_ROOM_BOUNDS } from "./roomBounds";
 import { RoomStage } from "./RoomStage";
+import { resolveRotationAxes } from "./rotationAxes";
 
 export interface PlaceableItem extends ModelDimensions {
   title: string;
@@ -96,12 +97,14 @@ export class RoomScene {
     const root = await this.modelLibrary.instantiate(item.modelUrl, item, strategy.pivot);
     if (this.isDisposed) return;
 
+    const baseSize = new Box3().setFromObject(root).getSize(new Vector3());
     const placed: PlacedItem = {
       title: item.title,
       root,
       strategy,
-      baseSize: new Box3().setFromObject(root).getSize(new Vector3()),
+      baseSize,
       scale: ITEM_SCALE.default,
+      rotationAxes: resolveRotationAxes(strategy.rotationAxis, baseSize),
     };
     root.position.copy(this.findSpawnPosition(placed));
 

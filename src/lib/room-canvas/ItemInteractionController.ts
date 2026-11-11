@@ -31,7 +31,7 @@ const TEXT_ENTRY_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
 
 /**
  * Selects, drags, rotates, resizes and removes placed items. Dragging projects the pointer onto the item's
- * placement surface; rotation uses a ring gizmo around the strategy's rotation axis (or the R key for quarter turns).
+ * placement surface; rotation uses ring gizmos for the item's allowed axes (R still quarter-turns the primary axis).
  */
 export class ItemInteractionController {
   private readonly raycaster = new Raycaster();
@@ -64,7 +64,7 @@ export class ItemInteractionController {
     this.selected = item;
     this.rotateControls.detach();
     if (item) {
-      showOnlyAxis(this.rotateControls, item.strategy.rotationAxis);
+      showAxes(this.rotateControls, item.rotationAxes);
       this.rotateControls.attach(item.root);
     }
 
@@ -175,7 +175,8 @@ export class ItemInteractionController {
     if (!this.selected || isTextEntryTarget(event.target)) return;
 
     if (event.key.toLowerCase() === ROTATE_KEY) {
-      this.selected.root.rotation[this.selected.strategy.rotationAxis] += QUARTER_TURN;
+      const primaryAxis = this.selected.rotationAxes[0] ?? this.selected.strategy.rotationAxis;
+      this.selected.root.rotation[primaryAxis] += QUARTER_TURN;
       this.keepOnSurface(this.selected);
       this.callbacks.onChange();
     } else if (GROW_KEYS.has(event.key)) {
@@ -249,10 +250,10 @@ function createRotateControls(camera: Camera, canvas: HTMLCanvasElement): Transf
   return controls;
 }
 
-function showOnlyAxis(controls: TransformControls, axis: RotationAxis): void {
-  controls.showX = false;
-  controls.showY = axis === "y";
-  controls.showZ = axis === "z";
+function showAxes(controls: TransformControls, axes: readonly RotationAxis[]): void {
+  controls.showX = axes.includes("x");
+  controls.showY = axes.includes("y");
+  controls.showZ = axes.includes("z");
 }
 
 function isTextEntryTarget(target: EventTarget | null): boolean {
