@@ -14,7 +14,7 @@ import {
   getMeshyGlbProxyUrl,
   waitForMeshyTask,
 } from "@/lib/api/meshy";
-import { createPlaceableItemFromStoreProduct } from "@/lib/ikea/generatedItem";
+import { createPlaceableItemFromStoreProduct } from "@/lib/store/generatedItem";
 import { type CameraSettings, DEFAULT_CAMERA_SETTINGS } from "@/lib/room-canvas/cameraSettings";
 import type { ItemSelection } from "@/lib/room-canvas/PlacedItem";
 import type { PlaceableItem } from "@/lib/room-canvas/RoomScene";

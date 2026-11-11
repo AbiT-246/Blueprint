@@ -2,7 +2,7 @@
 
 ## Next.js Agent Notes
 
-@AGENTS.md
+@frontend/AGENTS.md
 
 ---
 

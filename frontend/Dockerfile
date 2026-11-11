@@ -2,15 +2,15 @@
 
 FROM node:22-alpine AS deps
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json package-lock.json next.config.ts tsconfig.json postcss.config.mjs ./
+COPY frontend/package.json frontend/package-lock.json frontend/next.config.ts frontend/tsconfig.json frontend/postcss.config.mjs ./
 COPY public ./public
-COPY src ./src
+COPY frontend/src ./src
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 

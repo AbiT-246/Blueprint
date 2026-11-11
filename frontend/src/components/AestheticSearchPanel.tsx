@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import IkeaProductResults from "@/components/IkeaProductResults";
+import StoreProductResults from "@/components/StoreProductResults";
 import SidebarStatusMessage from "@/components/SidebarStatusMessage";
 import {
   SIDEBAR_SEARCH_INPUT_CLASS,
@@ -13,10 +13,6 @@ import {
   type ShoppingStore,
   type StoreProduct,
 } from "@/lib/api/catalog";
-
-const SEARCH_PAGE_SIZE = 24;
-const AMAZON_LIST_PAGE_SIZE = 50;
-const DEFAULT_IKEA_SEARCH_KEYWORD = "decor";
 
 interface AestheticSearchPanelProps {
   store: ShoppingStore;
@@ -43,13 +39,7 @@ export default function AestheticSearchPanel({
 
     setSearchState({ status: "loading" });
 
-    const query =
-      store === "amazon"
-        ? ""
-        : buildAestheticSearchQuery(aestheticLabel, DEFAULT_IKEA_SEARCH_KEYWORD);
-    const size = store === "amazon" ? AMAZON_LIST_PAGE_SIZE : SEARCH_PAGE_SIZE;
-
-    searchStoreProducts(store, query, size)
+    searchStoreProducts(store, "", { aestheticLabel })
       .then((response) => {
         if (!isActive) {
           return;
@@ -80,15 +70,12 @@ export default function AestheticSearchPanel({
       return;
     }
 
-    const query =
-      store === "amazon"
-        ? trimmedKeyword
-        : buildAestheticSearchQuery(aestheticLabel, trimmedKeyword);
-    const size = store === "amazon" ? AMAZON_LIST_PAGE_SIZE : SEARCH_PAGE_SIZE;
     setSearchState({ status: "loading" });
 
     try {
-      const response = await searchStoreProducts(store, query, size);
+      const response = await searchStoreProducts(store, trimmedKeyword, {
+        aestheticLabel,
+      });
       setSearchState({
         status: "ready",
         products: response.products,
@@ -107,11 +94,7 @@ export default function AestheticSearchPanel({
           value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
           placeholder="e.g. decor, lamp, rug"
-          aria-label={
-            store === "amazon"
-              ? `Search ${storeLabel} products`
-              : `Search ${storeLabel} for ${aestheticLabel} items`
-          }
+          aria-label={`Search ${storeLabel} for ${aestheticLabel} items`}
           className={SIDEBAR_SEARCH_INPUT_CLASS}
         />
         <button
@@ -136,7 +119,7 @@ export default function AestheticSearchPanel({
 
       {searchState.status === "ready" && (
         <>
-          <IkeaProductResults
+          <StoreProductResults
             products={searchState.products}
             onProductSelect={onProductSelect}
             emptyMessage={
@@ -152,8 +135,4 @@ export default function AestheticSearchPanel({
       )}
     </div>
   );
-}
-
-function buildAestheticSearchQuery(aestheticLabel: string, keyword: string): string {
-  return `${aestheticLabel.trim().toLowerCase()} ${keyword.trim()}`;
 }

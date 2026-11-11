@@ -1,5 +1,5 @@
-const DEFAULT_API_URL = "http://localhost:3001";
-export const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL ?? DEFAULT_API_URL}/api`;
+/** Same-origin Next.js proxy that attaches the server-side API key. */
+export const API_BASE_URL = "/backend-api";
 
 export class ApiError extends Error {
   constructor(

@@ -1,20 +1,20 @@
 "use client";
 
-import IkeaProductCard from "@/components/IkeaProductCard";
+import StoreProductCard from "@/components/StoreProductCard";
 import SidebarStatusMessage from "@/components/SidebarStatusMessage";
 import type { StoreProduct } from "@/lib/api/catalog";
 
-interface IkeaProductResultsProps {
+interface StoreProductResultsProps {
   products: StoreProduct[];
   onProductSelect: (product: StoreProduct) => void;
   emptyMessage?: string;
 }
 
-export default function IkeaProductResults({
+export default function StoreProductResults({
   products,
   onProductSelect,
   emptyMessage = "No products found.",
-}: IkeaProductResultsProps) {
+}: StoreProductResultsProps) {
   if (products.length === 0) {
     return <SidebarStatusMessage message={emptyMessage} />;
   }
@@ -23,7 +23,7 @@ export default function IkeaProductResults({
     <ul className="flex flex-col gap-4">
       {products.map((product) => (
         <li key={product.id}>
-          <IkeaProductCard product={product} onSelect={onProductSelect} />
+          <StoreProductCard product={product} onSelect={onProductSelect} />
         </li>
       ))}
     </ul>
