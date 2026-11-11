@@ -4,18 +4,18 @@ services:
     container_name: blueprint-postgres
     restart: unless-stopped
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT}:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-blueprint}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blueprint}
-      POSTGRES_DB: ${POSTGRES_DB:-blueprint}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-blueprint} -d ${POSTGRES_DB:-blueprint}",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
         ]
       interval: 5s
       timeout: 5s
@@ -29,15 +29,17 @@ services:
     container_name: blueprint-backend
     restart: unless-stopped
     ports:
-      - "${BACKEND_PORT:-3001}:3001"
+      - "${BACKEND_PORT}:3001"
     environment:
       PORT: 3001
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
-      DATABASE_URL: postgresql://${POSTGRES_USER:-blueprint}:${POSTGRES_PASSWORD:-blueprint}@postgres:5432/${POSTGRES_DB:-blueprint}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      API_KEY: ${API_KEY}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       MESHY_API_KEY: ${MESHY_API_KEY}
-      IKEA_COUNTRY: ${IKEA_COUNTRY:-ca}
-      IKEA_LANGUAGE: ${IKEA_LANGUAGE:-en}
+      IKEA_COUNTRY: ${IKEA_COUNTRY}
+      IKEA_LANGUAGE: ${IKEA_LANGUAGE}
+      SEED_DATABASE: ${SEED_DATABASE:-true}
     depends_on:
       postgres:
         condition: service_healthy
@@ -45,15 +47,16 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: frontend/Dockerfile
     container_name: blueprint-frontend
     restart: unless-stopped
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT}:3000"
     environment:
       PORT: 3000
       HOSTNAME: 0.0.0.0
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+      BACKEND_URL: http://backend:3001
+      API_KEY: ${API_KEY}
     depends_on:
       - backend
 

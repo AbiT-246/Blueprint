@@ -1,21 +1,22 @@
 # Blueprint
 
-Monorepo with a Next.js frontend, NestJS backend, and PostgreSQL.
+Having a mid-life crisis and want to redecorate your entire room? Don't know where to start? Welcome to Blueprint!
 
 ## Stack
 
-| App      | Path       | Tech                          | Port |
-| -------- | ---------- | ----------------------------- | ---- |
-| Frontend | repo root  | Next.js, TypeScript, Tailwind | 3000 |
-| Backend  | `backend/` | NestJS, TypeScript            | 3001 |
-| Database | Docker     | PostgreSQL 16                 | 5432* |
+| App      | Path         | Tech                          | Port |
+| -------- | ------------ | ----------------------------- | ---- |
+| Frontend | `frontend/`  | Next.js, TypeScript, Tailwind | 3000 |
+| Backend  | `backend/`   | NestJS, TypeScript            | 3001 |
+| Database | Docker       | PostgreSQL 16                 | 5432* |
 
-\* Host port comes from `POSTGRES_PORT` in `.env` (defaults to `5432`).
+\* Host port comes from `POSTGRES_PORT` in `.env`.
 
 ## Start everything with Docker
 
 ```bash
 cp .env.example .env
+# set API_KEY (and other secrets) in .env
 docker compose up --build -d
 # or: npm run docker:up
 ```
@@ -42,12 +43,19 @@ npm run docker:logs
 
 ```bash
 cp .env.example .env
+# set API_KEY, DATABASE_URL secrets, etc.
 npm run db:up
 
-npm install
-npm run dev
+cd frontend && npm install && npm run dev
 
-cd backend && cp .env.example .env && npm install && npm run start:dev
+cd backend && cp ../.env .env && npm install && npm run start:dev
+```
+
+Or from the repo root:
+
+```bash
+npm run dev
+npm run dev:backend
 ```
 
 If host port `5432` is already in use, set `POSTGRES_PORT=5433` in `.env` and point `backend/.env` `DATABASE_URL` at that port.

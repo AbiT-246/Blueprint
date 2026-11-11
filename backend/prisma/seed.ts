@@ -186,7 +186,7 @@ async function seedTemplates(): Promise<void> {
       }),
     );
   } catch (error) {
-    throw new Error('Failed to seed templates.', { cause: error });
+    throw wrapSeedError('Failed to seed templates.', error);
   }
 }
 
@@ -206,7 +206,7 @@ async function seedItems(): Promise<number> {
       return templateItemUpserts.length;
     });
   } catch (error) {
-    throw new Error('Failed to seed items.', { cause: error });
+    throw wrapSeedError('Failed to seed items.', error);
   }
 }
 
@@ -253,6 +253,11 @@ function upsertTemplateItem(
     update: placement,
     create: { templateId, itemId, ...placement },
   });
+}
+
+function wrapSeedError(message: string, error: unknown): Error {
+  const detail = error instanceof Error ? error.message : String(error);
+  return new Error(`${message} ${detail}`);
 }
 
 main().catch((error: Error) => {

@@ -58,7 +58,7 @@ function RejectionList({ rejections }: { rejections: readonly FileRejection[] })
 function getDropzoneMessage(isDragActive: boolean, isDragReject: boolean): string {
   if (isDragReject) return "Only a single image file is accepted";
   if (isDragActive) return "Drop it like it's hot";
-  return "Your room's glow-up starts here";
+  return "";
 }
 
 function getDropzoneStateClasses(isDragActive: boolean, isDragReject: boolean): string {

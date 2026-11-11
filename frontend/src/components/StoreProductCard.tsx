@@ -6,12 +6,12 @@ import {
 } from "@/components/sidebarStyles";
 import type { StoreProduct } from "@/lib/api/catalog";
 
-interface IkeaProductCardProps {
+interface StoreProductCardProps {
   product: StoreProduct;
   onSelect: (product: StoreProduct) => void;
 }
 
-export default function IkeaProductCard({ product, onSelect }: IkeaProductCardProps) {
+export default function StoreProductCard({ product, onSelect }: StoreProductCardProps) {
   const priceLabel = formatPrice(product.salesPrice);
   const canGenerate = Boolean(product.mainImageUrl);
 

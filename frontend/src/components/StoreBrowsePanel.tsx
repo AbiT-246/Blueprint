@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import IkeaProductResults from "@/components/IkeaProductResults";
+import StoreProductResults from "@/components/StoreProductResults";
 import SidebarStatusMessage from "@/components/SidebarStatusMessage";
 import { SIDEBAR_OPTION_BUTTON_CLASS, SIDEBAR_SEARCH_SUBMIT_CLASS } from "@/components/sidebarStyles";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
@@ -15,22 +15,21 @@ import {
   type StoreProduct,
 } from "@/lib/api/catalog";
 
-const INITIAL_PAGE_SIZE = 24;
 const LOAD_MORE_PAGE_SIZE = 24;
 
-interface IkeaBrowsePanelProps {
+interface StoreBrowsePanelProps {
   store: ShoppingStore;
   selectedCategory: StoreCategory | null;
   onSelectCategory: (category: StoreCategory) => void;
   onProductSelect: (product: StoreProduct) => void;
 }
 
-export default function IkeaBrowsePanel({
+export default function StoreBrowsePanel({
   store,
   selectedCategory,
   onSelectCategory,
   onProductSelect,
-}: IkeaBrowsePanelProps) {
+}: StoreBrowsePanelProps) {
   if (selectedCategory) {
     return (
       <StoreProductList
@@ -96,7 +95,7 @@ function StoreProductList({
   onProductSelect: (product: StoreProduct) => void;
 }) {
   const loadProducts = useCallback(
-    () => getStoreProducts(store, category.id, INITIAL_PAGE_SIZE),
+    () => getStoreProducts(store, category.id),
     [store, category.id],
   );
   const productsResource = useAsyncResource(loadProducts);
@@ -141,7 +140,7 @@ function StoreProductList({
 
   return (
     <div className="flex flex-col gap-4">
-      <IkeaProductResults
+      <StoreProductResults
         products={products}
         onProductSelect={onProductSelect}
         emptyMessage="No products found in this category."
