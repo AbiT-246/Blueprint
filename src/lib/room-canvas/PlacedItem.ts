@@ -1,5 +1,5 @@
 import { Box3, type Group, Matrix4, Vector3 } from "three";
-import type { PlacementStrategy } from "./placement/PlacementStrategy";
+import type { PlacementStrategy, RotationAxis } from "./placement/PlacementStrategy";
 
 /** A model instance in the room. `root` is a pivot at the model's base center or center (see `strategy.pivot`). */
 export interface PlacedItem {
@@ -9,6 +9,8 @@ export interface PlacedItem {
   /** Unrotated bounding-box size in meters at scale 1. */
   baseSize: Vector3;
   scale: number;
+  /** Axes shown on the rotate gizmo; flat items include X for tipping. */
+  rotationAxes: readonly RotationAxis[];
 }
 
 /** What the UI needs to know about the current selection. */

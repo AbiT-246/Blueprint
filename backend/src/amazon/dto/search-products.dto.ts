@@ -1,14 +1,15 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import {
   AMAZON_DEFAULT_PRODUCT_PAGE_SIZE,
   AMAZON_MAX_PRODUCT_PAGE_SIZE,
 } from '../constants/amazon.constants';
 
 export class SearchProductsDto {
+  /** Empty or omitted returns all dummy products. */
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  q!: string;
+  q: string = '';
 
   @IsOptional()
   @Type(() => Number)

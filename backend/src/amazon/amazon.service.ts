@@ -105,6 +105,10 @@ export class AmazonService {
   }
 
   private matchesKeyword(item: AmazonDummyItem, keyword: string): boolean {
+    if (keyword.length === 0) {
+      return true;
+    }
+
     const searchableValues = [
       item.asin,
       item.category,

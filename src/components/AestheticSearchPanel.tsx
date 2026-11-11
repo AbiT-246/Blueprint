@@ -15,7 +15,8 @@ import {
 } from "@/lib/api/catalog";
 
 const SEARCH_PAGE_SIZE = 24;
-const DEFAULT_SEARCH_KEYWORD = "decor";
+const AMAZON_LIST_PAGE_SIZE = 50;
+const DEFAULT_IKEA_SEARCH_KEYWORD = "decor";
 
 interface AestheticSearchPanelProps {
   store: ShoppingStore;
@@ -42,11 +43,13 @@ export default function AestheticSearchPanel({
 
     setSearchState({ status: "loading" });
 
-    searchStoreProducts(
-      store,
-      buildAestheticSearchQuery(aestheticLabel, DEFAULT_SEARCH_KEYWORD),
-      SEARCH_PAGE_SIZE,
-    )
+    const query =
+      store === "amazon"
+        ? ""
+        : buildAestheticSearchQuery(aestheticLabel, DEFAULT_IKEA_SEARCH_KEYWORD);
+    const size = store === "amazon" ? AMAZON_LIST_PAGE_SIZE : SEARCH_PAGE_SIZE;
+
+    searchStoreProducts(store, query, size)
       .then((response) => {
         if (!isActive) {
           return;
@@ -77,11 +80,15 @@ export default function AestheticSearchPanel({
       return;
     }
 
-    const query = buildAestheticSearchQuery(aestheticLabel, trimmedKeyword);
+    const query =
+      store === "amazon"
+        ? trimmedKeyword
+        : buildAestheticSearchQuery(aestheticLabel, trimmedKeyword);
+    const size = store === "amazon" ? AMAZON_LIST_PAGE_SIZE : SEARCH_PAGE_SIZE;
     setSearchState({ status: "loading" });
 
     try {
-      const response = await searchStoreProducts(store, query, SEARCH_PAGE_SIZE);
+      const response = await searchStoreProducts(store, query, size);
       setSearchState({
         status: "ready",
         products: response.products,
@@ -100,7 +107,11 @@ export default function AestheticSearchPanel({
           value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
           placeholder="e.g. decor, lamp, rug"
-          aria-label={`Search ${storeLabel} for ${aestheticLabel} items`}
+          aria-label={
+            store === "amazon"
+              ? `Search ${storeLabel} products`
+              : `Search ${storeLabel} for ${aestheticLabel} items`
+          }
           className={SIDEBAR_SEARCH_INPUT_CLASS}
         />
         <button
@@ -128,7 +139,11 @@ export default function AestheticSearchPanel({
           <IkeaProductResults
             products={searchState.products}
             onProductSelect={onProductSelect}
-            emptyMessage={`No products found for "${searchState.searchPhrase}".`}
+            emptyMessage={
+              searchState.searchPhrase
+                ? `No products found for "${searchState.searchPhrase}".`
+                : "No products found."
+            }
           />
           {searchState.products.length > 0 && (
             <p className="text-center text-xs text-mist/70">More pieces to make it yours ↓</p>
