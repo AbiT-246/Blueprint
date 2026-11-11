@@ -43,52 +43,34 @@ const TEMPLATE_SEEDS: TemplateSeed[] = [
     previewImageFile: 'Indie.webp',
   },
   {
-    style: DesignStyle.COTTAGECORE,
+    style: DesignStyle.SCANDINAVIAN,
     description:
-      'Simple living in harmony with nature. Floral bedding, botanical prints, candles, dried flowers, vintage mirrors and plenty of potted plants and greenery.',
-    previewImageFile: 'cottagecore.webp',
+      'Light, airy rooms with pale wood, soft neutrals and clean lines. Cozy textiles, simple furniture and a calm, functional feel.',
+    previewImageFile: 'scandinavian.png',
   },
   {
-    style: DesignStyle.SOFT_GIRL,
+    style: DesignStyle.MINIMALIST,
     description:
-      'Cutesy and feminine with pink and yellow tones. Strawberry-pattern bedding, string lights, flowers, heart-shaped mirrors and sweet desk accessories.',
-    previewImageFile: 'softgirl.webp',
+      'Uncluttered spaces with restrained palettes and intentional pieces. Negative space, simple forms and quiet materials take center stage.',
+    previewImageFile: 'minimalist.png',
   },
   {
-    style: DesignStyle.GRUNGE,
+    style: DesignStyle.INDUSTRIAL,
     description:
-      'Dark and edgy, rooted in 90s alternative rock. Music posters, wall collages, vinyl records, record players, neon accents, skull decor and electric guitars.',
-    previewImageFile: 'grunge.webp',
+      'Raw materials and urban edge—exposed metal, brick, concrete and utilitarian lighting with weathered wood accents.',
+    previewImageFile: 'industrial.png',
   },
   {
-    style: DesignStyle.E_GIRL,
+    style: DesignStyle.JAPANDI,
     description:
-      'Alt, electronic and geeky with a gaming focus. Anime wall art, LED strip lighting, neon signs, halo desk lamps and streaming accessories.',
-    previewImageFile: 'egirl.jpg',
+      'A blend of Japanese and Scandinavian calm: natural wood, soft neutrals, low furniture and thoughtful, uncluttered composition.',
+    previewImageFile: 'japandi.png',
   },
   {
-    style: DesignStyle.GALAXY,
+    style: DesignStyle.ECLECTIC,
     description:
-      'Spacecore centered on astronomy, stars and planets. Galaxy lamps, constellation globes, astronaut figurines, half-moon planters and a feature telescope.',
-    previewImageFile: 'galaxy.webp',
-  },
-  {
-    style: DesignStyle.ANIME,
-    description:
-      'Fiction and fantasy inspired by Japanese animation. Anime bedside lamps, character figurines, gaming collections and favorite-series wall art.',
-    previewImageFile: 'anime.webp',
-  },
-  {
-    style: DesignStyle.BOHO,
-    description:
-      'Eclectic and individual, mixing global patterns and natural materials. Macramé, layered cushions, candles, boho vases and mirrors, and lots of indoor plants.',
-    previewImageFile: 'boho.webp',
-  },
-  {
-    style: DesignStyle.DARK_ACADEMIA,
-    description:
-      'Literature, mystery and classical arts. Antique globes, old desk lamps, ink pots, sculptures, stacks of old books, candle holders and dried plants in glass flasks.',
-    previewImageFile: 'darkacademia.webp',
+      'A curated mix of eras, patterns and textures. Bold color, collected objects and layered styling that feel personal and expressive.',
+    previewImageFile: 'eclectic.png',
   },
 ];
 
@@ -183,6 +165,12 @@ async function main(): Promise<void> {
 
 async function seedTemplates(): Promise<void> {
   try {
+    const activeStyles = TEMPLATE_SEEDS.map(({ style }) => style);
+
+    await prisma.template.deleteMany({
+      where: { style: { notIn: activeStyles } },
+    });
+
     await prisma.$transaction(
       TEMPLATE_SEEDS.map(({ style, description, previewImageFile }) => {
         const data = {

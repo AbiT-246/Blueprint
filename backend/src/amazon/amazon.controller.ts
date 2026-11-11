@@ -29,7 +29,7 @@ export class AmazonController {
   searchProducts(
     @Query() { q, size }: SearchProductsDto,
   ): AmazonKeywordSearchResponse {
-    return this.amazonService.searchProductsByKeyword(q.trim(), size);
+    return this.amazonService.searchProductsByKeyword((q ?? '').trim(), size);
   }
 
   @Get('product/:asin')
