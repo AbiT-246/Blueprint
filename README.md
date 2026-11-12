@@ -2,6 +2,8 @@
 
 Having a mid-life crisis and want to redecorate your entire room? Don't know where to start? Welcome to Blueprint!
 
+**Amazon products are hard-coded while we wait for dev API approval:)**
+
 ## Stack
 
 | App      | Path         | Tech                          | Port |
