@@ -2,6 +2,8 @@
 
 Having a mid-life crisis and want to redecorate your entire room? Don't know where to start? Welcome to Blueprint!
 
+[Demo Here]([https://example.com](https://drive.google.com/file/d/1957IldB9vTD6KHBAekScYfr40Mc8AXAY/view?usp=sharing))
+
 **Amazon products are hard-coded while we wait for dev API approval:)**
 
 ## Stack
